@@ -29,7 +29,7 @@ gradle distZip
     always {
       archiveArtifacts '**/build/distributions/*.zip'
       mail  to: 'w@vecsight.com,t@vecsight.com',
-        subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} resulted ${currentBuild.result}",
+        subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} resulted ${currentBuild.currentResult}",
         body: "Build URL: ${env.BUILD_URL}"
     }
   }
