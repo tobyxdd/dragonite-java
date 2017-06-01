@@ -28,7 +28,7 @@ gradle distZip
   post {
     always {
       archiveArtifacts '**/build/distributions/*.zip'
-      mail  to: 'w@vecsight.com,t@vecsight.com,p@vecsight.com',
+      mail  to: 'w@vecsight.com,t@vecsight.com',
         subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} resulted ${currentBuild.result}",
         body: "Build URL: ${env.BUILD_URL}"
     }
