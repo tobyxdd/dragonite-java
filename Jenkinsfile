@@ -3,7 +3,6 @@ pipeline {
     docker {
       image 'gradle'
     }
-    
   }
   stages {
     stage('build') {
@@ -19,28 +18,43 @@ gradle distZip
         echo 'should run tests'
       }
     }
+    stage('archive') {
+      archiveArtifacts '**/build/distributions/*.zip'
+      emailext to: 'w@vecsight.com,t@vecsight.com,p@vecsight.com',
+        subject: "Artifacts from Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME}",
+        attachmentsPattern: '**/build/distributions/*.zip'
+    }
+    sta
     stage('deploy') {
       steps {
-        echo 'deploying to yoshino'
-        sshagent(['ssh_yoshino']) {
-          sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@yoshino.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
-          sh 'ssh -o StrictHostKeyChecking=no tobyxdd@yoshino.vecsight.com "cd /home/tobyxdd/jenkins/; bash dragonited.sh"'
-        }
-        echo 'deploying to batman'
-        sshagent(['ssh_batman']) {
-          sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@batman.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
-          sh 'ssh -o StrictHostKeyChecking=no tobyxdd@batman.vecsight.com "cd /home/tobyxdd/jenkins/; bash dragonited.sh"'
+        try {
+          timeout(time: 1, unit: 'HOURS') {
+            mail to: 'w@vecsight.com,t@vecsight.com',
+              subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} requests deployment confirm",
+              body: "Build URL: ${env.BUILD_URL}"
+            input message: 'Deploy?'
+            echo 'deploying to yoshino'
+            sshagent(['ssh_yoshino']) {
+              sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@yoshino.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
+              sh 'ssh -o StrictHostKeyChecking=no tobyxdd@yoshino.vecsight.com "cd /home/tobyxdd/jenkins/; bash dragonited.sh"'
+            }
+            echo 'deploying to batman'
+            sshagent(['ssh_batman']) {
+              sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@batman.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
+              sh 'ssh -o StrictHostKeyChecking=no tobyxdd@batman.vecsight.com "cd /home/tobyxdd/jenkins/; bash dragonited.sh"'
+            }
+          }
+        } catch (err) {
+          echo 'deployment aborted'
         }
       }
     }
   }
   post {
     always {
-      archiveArtifacts '**/build/distributions/*.zip'
       emailext to: 'w@vecsight.com,t@vecsight.com,p@vecsight.com',
         subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} resulted ${currentBuild.currentResult}",
-        body: "Build URL: ${env.BUILD_URL}",
-        attachmentsPattern: '**/build/distributions/*.zip',
+        body: "Build URL: ${env.BUILD_URL}"
         attachLog: true
     }
   }
