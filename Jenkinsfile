@@ -23,6 +23,7 @@ gradle distZip
       steps {
         archiveArtifacts '**/build/distributions/*.zip'
         emailext to: 'w@vecsight.com,t@vecsight.com,p@vecsight.com',
+          body: 'Artifacts:',
           subject: "Artifacts from Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME}",
           attachmentsPattern: '**/build/distributions/*.zip'
       }
@@ -56,7 +57,7 @@ gradle distZip
     always {
       emailext to: 'w@vecsight.com,t@vecsight.com,p@vecsight.com',
         subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} resulted ${currentBuild.currentResult}",
-        body: "Build URL: ${env.BUILD_URL}"
+        body: "Build URL: ${env.BUILD_URL}",
         attachLog: true
     }
   }
