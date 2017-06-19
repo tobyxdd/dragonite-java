@@ -29,29 +29,31 @@ gradle distZip
       }
     }
     stage('deploy') {
-      //steps {
-        try {
-          timeout(time: 1, unit: 'HOURS') {
-            mail to: 'w@vecsight.com,t@vecsight.com',
-              subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} requests deployment confirm",
-              body: "Build URL: ${env.BUILD_URL}"
-            input message: 'Deploy?'
-            echo 'deploying to yoshino'
-            sshagent(['ssh_yoshino']) {
-              sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@yoshino.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
-              sh 'ssh -o StrictHostKeyChecking=no tobyxdd@yoshino.vecsight.com "cd /home/tobyxdd/jenkins/; bash dragonited.sh"'
+      steps {
+        script {
+          try {
+            timeout(time: 1, unit: 'HOURS') {
+              mail to: 'w@vecsight.com,t@vecsight.com',
+                subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} requests deployment confirm",
+                body: "Build URL: ${env.BUILD_URL}"
+              input message: 'Deploy?'
+              echo 'deploying to yoshino'
+              sshagent(['ssh_yoshino']) {
+                sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@yoshino.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
+                sh 'ssh -o StrictHostKeyChecking=no tobyxdd@yoshino.vecsight.com "cd /home/tobyxdd/jenkins/; bash dragonited.sh"'
+              }
+              echo 'deploying to batman'
+              sshagent(['ssh_batman']) {
+                sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@batman.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
+                sh 'ssh -o StrictHostKeyChecking=no tobyxdd@batman.vecsight.com "cd /home/tobyxdd/jenkins/; bash dragonited.sh"'
+              }
             }
-            echo 'deploying to batman'
-            sshagent(['ssh_batman']) {
-              sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@batman.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
-              sh 'ssh -o StrictHostKeyChecking=no tobyxdd@batman.vecsight.com "cd /home/tobyxdd/jenkins/; bash dragonited.sh"'
-            }
+          } catch (err) {
+            echo 'deployment aborted'
           }
-        } catch (err) {
-          echo 'deployment aborted'
         }
       }
-    //}
+    }
   }
   post {
     always {
