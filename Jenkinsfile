@@ -59,6 +59,7 @@ gradle distZip
   post {
     always {
       emailext to: 'w@vecsight.com,t@vecsight.com,p@vecsight.com',
+        mimeType: 'text/html',
         subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} resulted ${currentBuild.currentResult}",
         body: "<a href=\"${env.BUILD_URL}\">Click here for more detail</a><br><br>Or ${env.BUILD_URL}",
         attachLog: true
