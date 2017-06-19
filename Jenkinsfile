@@ -24,7 +24,7 @@ gradle distZip
         archiveArtifacts '**/build/distributions/*.zip'
         emailext to: 'w@vecsight.com,t@vecsight.com,p@vecsight.com',
           body: 'Artifacts:',
-          subject: "Artifacts from Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME}",
+          subject: "Artifacts from pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME}",
           attachmentsPattern: '**/build/distributions/*.zip'
       }
     }
@@ -34,9 +34,10 @@ gradle distZip
           try {
             timeout(time: 1, unit: 'HOURS') {
               mail to: 'w@vecsight.com,t@vecsight.com',
+                mimeType: 'text/html',
                 subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} requests deployment confirm",
-                body: "Build URL: ${env.BUILD_URL}"
-              input message: 'Deploy?'
+                body: "<a href=\"${env.BUILD_URL}input\">Click here to proceed or abort</a><br><br>Or ${env.BUILD_URL}input"
+              input id: tok message: 'Deploy?'
               echo 'deploying to yoshino'
               sshagent(['ssh_yoshino']) {
                 sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@yoshino.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
@@ -59,7 +60,7 @@ gradle distZip
     always {
       emailext to: 'w@vecsight.com,t@vecsight.com,p@vecsight.com',
         subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} resulted ${currentBuild.currentResult}",
-        body: "Build URL: ${env.BUILD_URL}",
+        body: "<a href=\"${env.BUILD_URL}\">Click here for more detail</a><br><br>Or ${env.BUILD_URL}",
         attachLog: true
     }
   }
