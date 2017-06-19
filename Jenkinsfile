@@ -1,8 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'gradle'
-      args  '-v /etc/passwd:/etc/passwd'
+      image 'jenkins_gradle'
     }
     
   }
