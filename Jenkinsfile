@@ -29,7 +29,7 @@ gradle distZip
       }
     }
     stage('deploy') {
-      steps {
+      //steps {
         try {
           timeout(time: 1, unit: 'HOURS') {
             mail to: 'w@vecsight.com,t@vecsight.com',
@@ -51,7 +51,7 @@ gradle distZip
           echo 'deployment aborted'
         }
       }
-    }
+    //}
   }
   post {
     always {
