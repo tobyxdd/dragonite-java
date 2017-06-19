@@ -2,6 +2,7 @@ pipeline {
   agent {
     docker {
       image 'gradle'
+      args  '-v /etc/passwd:/etc/passwd'
     }
     
   }
@@ -23,12 +24,12 @@ gradle distZip
       steps {
         echo 'deploying to yoshino'
         sshagent(['ssh_yoshino']) {
-          sh 'cat ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip | ssh -o StrictHostKeyChecking=no tobyxdd@yoshino.vecsight.com "cat > /home/tobyxdd/jenkins/dragonite-forwarder.zip"'
+          sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@yoshino.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
           sh 'ssh -o StrictHostKeyChecking=no tobyxdd@yoshino.vecsight.com bash -c "cd /home/tobyxdd/jenkins/; ./dragonited.sh"'
         }
         echo 'deploying to batman'
         sshagent(['ssh_batman']) {
-          sh 'cat ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip | ssh -o StrictHostKeyChecking=no tobyxdd@batman.vecsight.com "cat > /home/tobyxdd/jenkins/dragonite-forwarder.zip"'
+          sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@batman.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
           sh 'ssh -o StrictHostKeyChecking=no tobyxdd@batman.vecsight.com bash -c "cd /home/tobyxdd/jenkins/; ./dragonited.sh"'
         }
       }
