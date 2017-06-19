@@ -37,7 +37,7 @@ gradle distZip
                 mimeType: 'text/html',
                 subject: "Pipeline '${env.JOB_NAME}' ${env.BUILD_DISPLAY_NAME} requests deployment confirm",
                 body: "<a href=\"${env.BUILD_URL}input\">Click here to proceed or abort</a><br><br>Or ${env.BUILD_URL}input"
-              input id: tok message: 'Deploy?'
+              input message: 'Deploy?'
               echo 'deploying to yoshino'
               sshagent(['ssh_yoshino']) {
                 sh 'scp -o StrictHostKeyChecking=no ./dragonite-forwarder/build/distributions/dragonite-forwarder*.zip tobyxdd@yoshino.vecsight.com:/home/tobyxdd/jenkins/dragonite-forwarder.zip'
