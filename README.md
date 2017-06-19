@@ -19,5 +19,3 @@ Dragonite is a (yet another, but one of the few that are being actively develope
 
 - The project has not yet been completed, expect major bugs
 - Dragonite has no built-in congestion control algorithms so it is not TCP-friendly
-
-Another day in paradise.
