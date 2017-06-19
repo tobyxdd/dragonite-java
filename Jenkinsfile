@@ -1,3 +1,4 @@
+
 pipeline {
   agent {
     docker {
@@ -26,7 +27,6 @@ gradle distZip
           attachmentsPattern: '**/build/distributions/*.zip'
       }
     }
-    sta
     stage('deploy') {
       steps {
         try {
