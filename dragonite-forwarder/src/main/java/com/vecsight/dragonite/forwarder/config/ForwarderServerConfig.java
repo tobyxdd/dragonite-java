@@ -8,6 +8,8 @@
 package com.vecsight.dragonite.forwarder.config;
 
 import com.vecsight.dragonite.sdk.config.DragoniteSocketParameters;
+import com.vecsight.dragonite.sdk.cryptor.AESCryptor;
+import com.vecsight.dragonite.sdk.exception.EncryptionException;
 import com.vecsight.dragonite.utils.system.SystemInfo;
 
 import java.net.InetSocketAddress;
@@ -19,6 +21,8 @@ public class ForwarderServerConfig {
     private InetSocketAddress bindAddress;
 
     private InetSocketAddress forwardingAddress;
+
+    private String password;
 
     private int mbpsLimit = 0;
 
@@ -64,6 +68,16 @@ public class ForwarderServerConfig {
     public void setWelcomeMessage(final String welcomeMessage) {
         checkArgument(welcomeMessage != null, "Null welcome message");
         this.welcomeMessage = welcomeMessage;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(final String password) throws EncryptionException {
+        checkArgument(password != null && password.length() >= 4, "Invalid password");
+        dragoniteSocketParameters.setPacketCryptor(new AESCryptor(password));
+        this.password = password;
     }
 
     public int getMTU() {
