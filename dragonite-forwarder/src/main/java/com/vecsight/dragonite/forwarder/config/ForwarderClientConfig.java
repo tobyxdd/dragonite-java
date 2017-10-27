@@ -7,6 +7,7 @@
 
 package com.vecsight.dragonite.forwarder.config;
 
+import com.vecsight.dragonite.forwarder.misc.ForwarderGlobalConstants;
 import com.vecsight.dragonite.sdk.config.DragoniteSocketParameters;
 import com.vecsight.dragonite.sdk.cryptor.AESCryptor;
 import com.vecsight.dragonite.sdk.exception.EncryptionException;
@@ -76,7 +77,7 @@ public class ForwarderClientConfig {
     }
 
     public void setPassword(final String password) throws EncryptionException {
-        checkArgument(password != null && password.length() >= 4, "Invalid password");
+        checkArgument(password != null && password.length() >= ForwarderGlobalConstants.PASSWORD_MIN_LENGTH, "Invalid password");
         dragoniteSocketParameters.setPacketCryptor(new AESCryptor(password));
         this.password = password;
     }
