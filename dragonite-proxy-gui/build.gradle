@@ -1,0 +1,49 @@
+/*
+ * The Dragonite Project
+ * -------------------------
+ * See the LICENSE file in the root directory for license information.
+ */
+
+
+
+plugins {
+    id 'de.fuerstenau.buildconfig' version '1.1.8'
+}
+
+group 'com.vecsight.dragonite'
+version '0.3.1'
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+
+//mainClassName = 'com.vecsight.dragonite.proxy.CLIMain'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+applicationDistribution.from("samples") {
+    into "samples"
+}
+
+dependencies {
+    compile project(':dragonite-sdk')
+    compile project(':dragonite-mux')
+    compile project(':dragonite-utils')
+    compile project(':dragonite-proxy')
+    compile 'org.projectlombok:lombok:1.16.18'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'org.apache.commons:commons-lang3:3.7'
+    compile 'com.jfoenix:jfoenix:1.10.0'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'ch.qos.logback:logback-core:1.2.3'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+}
+
+buildConfig {
+    clsName = 'ProxyBuildConfig'
+}
