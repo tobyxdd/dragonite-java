@@ -10,7 +10,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("DragoniteController.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/DragoniteController.fxml"));
         primaryStage.setTitle("DragoniteX");
         primaryStage.setScene(new Scene(root, 860, 567));
         // 禁止调整窗口大小

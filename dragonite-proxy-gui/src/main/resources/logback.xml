@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <appender name="TextAreaStaticOutputStreamAppender" class="me.mritd.log.TextAreaStaticOutputStreamAppender">
+    <appender name="TextAreaStaticOutputStreamAppender" class="com.vecsight.dragonite.proxy.gui.log.TextAreaStaticOutputStreamAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>

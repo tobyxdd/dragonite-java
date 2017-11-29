@@ -13,7 +13,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0"
             prefWidth="849.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="me.mritd.DragoniteXController">
+            fx:controller="com.vecsight.dragonite.proxy.gui.controller.DragoniteController">
     <children>
         <TextArea fx:id="taLogs" layoutX="368.0" layoutY="132.0" prefHeight="307.0" prefWidth="472.0"/>
         <Button fx:id="btSave" layoutX="313.0" layoutY="492.0" mnemonicParsing="false" onAction="#dragoniteProxySave"
