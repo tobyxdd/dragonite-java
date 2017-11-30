@@ -8,20 +8,22 @@ import java.io.OutputStream;
 /*******************************************************************************
  * Copyright (c) 2005-2017 Mritd, Inc.
  * dragonite
- * com.vecsight.dragonite.proxy.gui.module
- * Created by mritd on 17/11/28 下午9:38.
- * Description: TextAreaOutputStream
+ * com.vecsight.dragonite.proxy.gui.log
+ * Created by mritd on 17/11/30 下午10:50.
+ * Description: LogOutputStream
  *******************************************************************************/
-public class TextAreaOutputStream extends OutputStream {
-
+public class LogOutputStream extends OutputStream {
     private TextArea textArea;
 
-    public TextAreaOutputStream(TextArea textArea) {
+    public LogOutputStream(TextArea textArea) {
         this.textArea = textArea;
     }
 
     @Override
     public void write(int b) throws IOException {
-        textArea.appendText(String.valueOf((char) b));
+
+        // redirects data to the text area
+        textArea.appendText(String.valueOf((char)b));
+
     }
 }
