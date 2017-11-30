@@ -130,7 +130,7 @@ public class DragoniteController {
     @FXML
     public void dragoniteProxyStop(ActionEvent event) {
 
-        proxyClient.close();
+        if (proxyClient != null) proxyClient.close();
         Logger.info("DragoniteProxy Stoped...");
 
     }

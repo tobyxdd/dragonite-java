@@ -52,13 +52,13 @@
                 <Label fx:id="lLimit" text="Limit" GridPane.rowIndex="6"/>
                 <Label fx:id="lMTU" text="MTU" GridPane.rowIndex="7"/>
                 <TextField fx:id="tfServer" GridPane.columnIndex="1"/>
+                <PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <TextField fx:id="tfServerPort" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                <TextField fx:id="tfLoadlPort" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <TextField fx:id="tfLocalPort" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                 <TextField fx:id="tfDownloadMbps" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                 <TextField fx:id="tfUploadMbps" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
                 <TextField fx:id="tfLimitMbps" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
                 <TextField fx:id="tfMTU" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-                <PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             </children>
         </GridPane>
         <ImageView fitHeight="81.0" fitWidth="119.0" layoutX="32.0" layoutY="36.0" pickOnBounds="true"
