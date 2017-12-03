@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private DragoniteController dragoniteController;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -17,9 +19,8 @@ public class Main extends Application {
         AnchorPane anchorPane = fxmlLoader.load();
         primaryStage.setTitle("DragoniteX");
         primaryStage.setScene(new Scene(anchorPane, 860, 567));
-        // 禁止调整窗口大小
         primaryStage.setResizable(false);
-        DragoniteController dragoniteController = fxmlLoader.getController();
+        dragoniteController = fxmlLoader.getController();
         dragoniteController.initLog();
         dragoniteController.loadConfig();
 
@@ -27,6 +28,10 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        dragoniteController.saveConfig();
+    }
 
     public static void main(String[] args) {
         launch(args);
