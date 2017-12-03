@@ -1,7 +1,5 @@
 package com.vecsight.dragonite.proxy.gui.module;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,23 +13,23 @@ import lombok.ToString;
  * Description: GuiConfig
  *******************************************************************************/
 @Getter
-@Setter
 @ToString
 @EqualsAndHashCode
 public class GuiConfig {
-    private StringProperty serverAddress;
-    private StringProperty serverPassword;
-    private IntegerProperty serverPort;
-    private IntegerProperty localSocks5Port;
-    private IntegerProperty downloadMbps;
-    private IntegerProperty uploadMbps;
-    private IntegerProperty limitMbps;
+    private String serverAddress;
+    private String serverPassword;
+    private Integer serverPort;
+    private Integer localSocks5Port;
+    private Integer downloadMbps;
+    private Integer uploadMbps;
+    private Integer limitMbps;
+    private Integer MTU;
 
     public GuiConfig() {
 
     }
 
-    public GuiConfig(StringProperty serverAddress, StringProperty serverPassword, IntegerProperty serverPort, IntegerProperty localSocks5Port, IntegerProperty downloadMbps, IntegerProperty uploadMbps, IntegerProperty limitMbps) {
+    public GuiConfig(String serverAddress, String serverPassword, Integer serverPort, Integer localSocks5Port, Integer downloadMbps, Integer uploadMbps, Integer limitMbps, Integer MTU) {
         this.serverAddress = serverAddress;
         this.serverPassword = serverPassword;
         this.serverPort = serverPort;
@@ -39,6 +37,46 @@ public class GuiConfig {
         this.downloadMbps = downloadMbps;
         this.uploadMbps = uploadMbps;
         this.limitMbps = limitMbps;
+        this.MTU = MTU;
     }
 
+    public GuiConfig setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+        return this;
+    }
+
+    public GuiConfig setServerPassword(String serverPassword) {
+        this.serverPassword = serverPassword;
+        return this;
+    }
+
+    public GuiConfig setServerPort(Integer serverPort) {
+        this.serverPort = serverPort;
+        return this;
+    }
+
+    public GuiConfig setLocalSocks5Port(Integer localSocks5Port) {
+        this.localSocks5Port = localSocks5Port;
+        return this;
+    }
+
+    public GuiConfig setDownloadMbps(Integer downloadMbps) {
+        this.downloadMbps = downloadMbps;
+        return this;
+    }
+
+    public GuiConfig setUploadMbps(Integer uploadMbps) {
+        this.uploadMbps = uploadMbps;
+        return this;
+    }
+
+    public GuiConfig setLimitMbps(Integer limitMbps) {
+        this.limitMbps = limitMbps;
+        return this;
+    }
+
+    public GuiConfig setMTU(Integer MTU) {
+        this.MTU = MTU;
+        return this;
+    }
 }
