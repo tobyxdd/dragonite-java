@@ -75,7 +75,7 @@ public class DragoniteController {
     private ProxyClientConfig clientConfig;
     private ProxyClient proxyClient;
 
-    public static final String CONFIG_PATH = "/dragonite-proxy-gui.json";
+    public static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
 
 
     @FXML
@@ -89,19 +89,19 @@ public class DragoniteController {
             Logger.error("Server password is blank! ");
             return;
         }
-        if (StringUtils.isBlank(tfServerPort.getText())|| !isNumeric(tfServerPort.getText())) {
+        if (StringUtils.isBlank(tfServerPort.getText()) || !isNumeric(tfServerPort.getText())) {
             Logger.error("Server port is blank or format is incorrect!");
             return;
         }
-        if (StringUtils.isBlank(tfLocalPort.getText())|| !isNumeric(tfLocalPort.getText())) {
+        if (StringUtils.isBlank(tfLocalPort.getText()) || !isNumeric(tfLocalPort.getText())) {
             Logger.error("Local socks5 port is blank or format is incorrect!");
             return;
         }
-        if (StringUtils.isBlank(tfDownloadMbps.getText())|| !isNumeric(tfDownloadMbps.getText())) {
+        if (StringUtils.isBlank(tfDownloadMbps.getText()) || !isNumeric(tfDownloadMbps.getText())) {
             Logger.error("Download mbps is blank or format is incorrect!");
             return;
         }
-        if (StringUtils.isBlank(tfUploadMbps.getText())|| ! isNumeric(tfUploadMbps.getText())) {
+        if (StringUtils.isBlank(tfUploadMbps.getText()) || !isNumeric(tfUploadMbps.getText())) {
             Logger.error("Upload mbps is blank or format is incorrect!");
             return;
         }
@@ -110,7 +110,7 @@ public class DragoniteController {
             return;
         }
 
-        if (StringUtils.isNotBlank(tfMTU.getText()) && !isNumeric(tfMTU.getText())){
+        if (StringUtils.isNotBlank(tfMTU.getText()) && !isNumeric(tfMTU.getText())) {
             Logger.error("MTU format is incorrect!");
             return;
         }
@@ -160,7 +160,15 @@ public class DragoniteController {
 
 
         try {
-            InputStream input = new FileInputStream(new File(getClass().getResource(CONFIG_PATH).getPath()));
+
+            File configFile = new File(CONFIG_PATH);
+
+            if (!configFile.exists()) {
+                Logger.warn("Config file not found!");
+                return;
+            }
+
+            InputStream input = new FileInputStream(configFile);
             JsonReader reader = new JsonReader(new InputStreamReader(input));
             GuiConfig config = new Gson().fromJson(reader, GuiConfig.class);
             Logger.info(config);
@@ -183,7 +191,19 @@ public class DragoniteController {
     public void saveConfig() {
 
         try {
-            OutputStream out = new FileOutputStream(new File(getClass().getResource(CONFIG_PATH).getPath()));
+
+            File configFile = new File(CONFIG_PATH);
+            if (!configFile.exists()) {
+                Logger.warn("Config file not found!");
+                if (configFile.createNewFile()) {
+                    Logger.info("Config file crate success!");
+                } else {
+                    Logger.error("Config file create failed!");
+                    return;
+                }
+            }
+
+            OutputStream out = new FileOutputStream(configFile);
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
             GuiConfig config = new GuiConfig()
                     .setServerAddress(StringUtils.isNotBlank(tfServer.getText()) ? tfServer.getText() : "www.google.com")
