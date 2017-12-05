@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.shape.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.chart.*?>
-<?import java.lang.*?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0"
             prefWidth="849.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.vecsight.dragonite.proxy.gui.controller.DragoniteController">
+            fx:controller="com.vecsight.dragonite.proxy.gui.controller.DragoniteController" stylesheets="Theme.css">
     <children>
-        <TextArea fx:id="taLogs" layoutX="368.0" layoutY="132.0" prefHeight="307.0" prefWidth="472.0"/>
-        <Button fx:id="btSave" layoutX="313.0" layoutY="492.0" mnemonicParsing="false" onAction="#dragoniteProxySave"
-                text="Save"/>
-        <Button fx:id="btStart" layoutX="57.0" layoutY="492.0" mnemonicParsing="false" onAction="#dragoniteProxyStart"
-                text="Start"/>
-        <Button fx:id="btStop" layoutX="186.0" layoutY="492.0" mnemonicParsing="false" onAction="#dragoniteProxyStop"
-                text="Stop"/>
+        <JFXTextArea fx:id="taLogs" layoutX="368.0" layoutY="132.0" prefHeight="307.0" prefWidth="472.0"/>
+        <JFXButton fx:id="btSave" layoutX="313.0" layoutY="492.0" mnemonicParsing="false" onAction="#dragoniteProxySave"
+                   text="SAVE" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
+        <JFXButton fx:id="btStart" layoutX="57.0" layoutY="492.0" mnemonicParsing="false"
+                   onAction="#dragoniteProxyStart"
+                   text="START" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
+        <JFXButton fx:id="btStop" layoutX="186.0" layoutY="492.0" mnemonicParsing="false" onAction="#dragoniteProxyStop"
+                   text="STOP" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
         <MenuBar prefHeight="17.0" prefWidth="849.0">
             <menus>
                 <Menu fx:id="menuAbout" mnemonicParsing="false" text="About"/>
@@ -45,20 +40,20 @@
             <children>
                 <Label fx:id="lServer" text="Server"/>
                 <Label fx:id="lPassword" text="Password" GridPane.rowIndex="1"/>
-                <Label fx:id="lServerPort" text="Server Port" GridPane.rowIndex="2" />
+                <Label fx:id="lServerPort" text="Server Port" GridPane.rowIndex="2"/>
                 <Label fx:id="lLocalPort" text="Local Port" GridPane.rowIndex="3"/>
                 <Label fx:id="lDownload" text="Download" GridPane.rowIndex="4"/>
                 <Label fx:id="lUpload" text="Upload" GridPane.rowIndex="5"/>
                 <Label fx:id="lLimit" text="Limit" GridPane.rowIndex="6"/>
                 <Label fx:id="lMTU" text="MTU" GridPane.rowIndex="7"/>
-                <TextField fx:id="tfServer" GridPane.columnIndex="1"/>
-                <PasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <TextField fx:id="tfServerPort" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                <TextField fx:id="tfLocalPort" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                <TextField fx:id="tfDownloadMbps" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                <TextField fx:id="tfUploadMbps" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                <TextField fx:id="tfLimitMbps" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-                <TextField fx:id="tfMTU" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                <JFXTextField fx:id="tfServer" GridPane.columnIndex="1"/>
+                <JFXPasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <JFXTextField fx:id="tfServerPort" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <JFXTextField fx:id="tfLocalPort" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <JFXTextField fx:id="tfDownloadMbps" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <JFXTextField fx:id="tfUploadMbps" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                <JFXTextField fx:id="tfLimitMbps" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                <JFXTextField fx:id="tfMTU" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
             </children>
         </GridPane>
         <ImageView fitHeight="81.0" fitWidth="119.0" layoutX="32.0" layoutY="36.0" pickOnBounds="true"
