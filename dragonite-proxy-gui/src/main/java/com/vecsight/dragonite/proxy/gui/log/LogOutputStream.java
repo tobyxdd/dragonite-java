@@ -1,8 +1,8 @@
 package com.vecsight.dragonite.proxy.gui.log;
 
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 /*******************************************************************************
@@ -20,10 +20,10 @@ public class LogOutputStream extends OutputStream {
     }
 
     @Override
-    public void write(int b) throws IOException {
+    public void write(int b) {
 
         // redirects data to the text area
-        textArea.appendText(String.valueOf((char)b));
+        Platform.runLater(() -> textArea.appendText(String.valueOf((char) b)));
 
     }
 }
