@@ -22,21 +22,19 @@ public class GuiConfig {
     private Integer localSocks5Port;
     private Integer downloadMbps;
     private Integer uploadMbps;
-    private Integer limitMbps;
     private Integer MTU;
 
     public GuiConfig() {
 
     }
 
-    public GuiConfig(String serverAddress, String serverPassword, Integer serverPort, Integer localSocks5Port, Integer downloadMbps, Integer uploadMbps, Integer limitMbps, Integer MTU) {
+    public GuiConfig(String serverAddress, String serverPassword, Integer serverPort, Integer localSocks5Port, Integer downloadMbps, Integer uploadMbps, Integer MTU) {
         this.serverAddress = serverAddress;
         this.serverPassword = serverPassword;
         this.serverPort = serverPort;
         this.localSocks5Port = localSocks5Port;
         this.downloadMbps = downloadMbps;
         this.uploadMbps = uploadMbps;
-        this.limitMbps = limitMbps;
         this.MTU = MTU;
     }
 
@@ -67,11 +65,6 @@ public class GuiConfig {
 
     public GuiConfig setUploadMbps(Integer uploadMbps) {
         this.uploadMbps = uploadMbps;
-        return this;
-    }
-
-    public GuiConfig setLimitMbps(Integer limitMbps) {
-        this.limitMbps = limitMbps;
         return this;
     }
 

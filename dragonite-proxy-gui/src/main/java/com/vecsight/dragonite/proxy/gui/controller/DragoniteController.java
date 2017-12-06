@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import lombok.Cleanup;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 
@@ -49,8 +50,6 @@ public class DragoniteController {
     @FXML
     private TextField tfUploadMbps;
     @FXML
-    private TextField tfLimitMbps;
-    @FXML
     private TextField tfMTU;
     @FXML
     private TextArea taLogs;
@@ -67,8 +66,6 @@ public class DragoniteController {
     private Label lDownload;
     @FXML
     private Label lUpload;
-    @FXML
-    private Label lLimit;
     @FXML
     private Label lMTU;
 
@@ -105,10 +102,6 @@ public class DragoniteController {
             Logger.error("Upload mbps is blank or format is incorrect!");
             return;
         }
-        if (StringUtils.isBlank(tfLimitMbps.getText()) || !isNumeric(tfLimitMbps.getText())) {
-            Logger.error("Limit mbps is blank or format is incorrect!");
-            return;
-        }
 
         if (StringUtils.isNotBlank(tfMTU.getText()) && !isNumeric(tfMTU.getText())) {
             Logger.error("MTU format is incorrect!");
@@ -125,6 +118,7 @@ public class DragoniteController {
 
         try {
             clientConfig = new ProxyClientConfig(new InetSocketAddress(serverAddress, serverPort), localSocks5Port, serverPassword, downloadMbps, uploadMbps);
+            clientConfig.setMTU(StringUtils.isNotBlank(tfMTU.getText()) ? Integer.parseInt(tfMTU.getText()) : 1300);
             proxyClient = new ProxyClient(clientConfig);
         } catch (EncryptionException | IOException | ServerRejectedException | InterruptedException | DragoniteException | IncorrectHeaderException e) {
             Logger.error(e, "DragoniteProxy Start Failed");
@@ -168,8 +162,8 @@ public class DragoniteController {
                 return;
             }
 
-            InputStream input = new FileInputStream(configFile);
-            JsonReader reader = new JsonReader(new InputStreamReader(input));
+            @Cleanup InputStream input = new FileInputStream(configFile);
+            @Cleanup JsonReader reader = new JsonReader(new InputStreamReader(input));
             GuiConfig config = new Gson().fromJson(reader, GuiConfig.class);
             Logger.info(config);
 
@@ -179,10 +173,9 @@ public class DragoniteController {
             tfLocalPort.setText(config.getLocalSocks5Port() + "");
             tfDownloadMbps.setText(config.getDownloadMbps() + "");
             tfUploadMbps.setText(config.getUploadMbps() + "");
-            tfLimitMbps.setText(config.getLimitMbps() + "");
             tfMTU.setText(config.getMTU() != null ? config.getMTU() + "" : "");
 
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             Logger.error(e, "Load Config Error");
         }
 
@@ -203,16 +196,15 @@ public class DragoniteController {
                 }
             }
 
-            OutputStream out = new FileOutputStream(configFile);
-            JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
+            @Cleanup OutputStream out = new FileOutputStream(configFile);
+            @Cleanup JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
             GuiConfig config = new GuiConfig()
-                    .setServerAddress(StringUtils.isNotBlank(tfServer.getText()) ? tfServer.getText() : "www.google.com")
+                    .setServerAddress(StringUtils.isNotBlank(tfServer.getText()) ? tfServer.getText() : "google.com")
                     .setServerPort(StringUtils.isNotBlank(tfServerPort.getText()) ? Integer.parseInt(tfServerPort.getText()) : 9000)
-                    .setServerPassword(StringUtils.isNotBlank(pfPassword.getText()) ? pfPassword.getText() : "uuT466wJr4RAfA7KZ7GB39XKHmBazgGs")
-                    .setLocalSocks5Port(StringUtils.isNotBlank(tfLocalPort.getText()) ? Integer.parseInt(tfLocalPort.getText()) : 4050)
+                    .setServerPassword(StringUtils.isNotBlank(pfPassword.getText()) ? pfPassword.getText() : "jFThJnp2hppzzPJy")
+                    .setLocalSocks5Port(StringUtils.isNotBlank(tfLocalPort.getText()) ? Integer.parseInt(tfLocalPort.getText()) : 5234)
                     .setDownloadMbps(StringUtils.isNotBlank(tfDownloadMbps.getText()) ? Integer.parseInt(tfDownloadMbps.getText()) : 100)
                     .setUploadMbps(StringUtils.isNotBlank(tfUploadMbps.getText()) ? Integer.parseInt(tfUploadMbps.getText()) : 10)
-                    .setLimitMbps(StringUtils.isNotBlank(tfLimitMbps.getText()) ? Integer.parseInt(tfLimitMbps.getText()) : 100)
                     .setMTU(StringUtils.isNotBlank(tfMTU.getText()) ? Integer.parseInt(tfMTU.getText()) : 1300);
 
             Logger.info(config);
@@ -220,24 +212,16 @@ public class DragoniteController {
             new Gson().toJson(config, new TypeToken<GuiConfig>() {
             }.getType(), writer);
             writer.flush();
-            writer.close();
-            out.close();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             Logger.error(e, "Config save Failed");
         }
     }
 
 
-    public static boolean isNumeric(String str) {
+    private boolean isNumeric(String str) {
         String regEx = "^[0-9]+$";
-        Pattern pat = Pattern.compile(regEx);
-        Matcher mat = pat.matcher(str);
-        if (mat.find()) {
-            return true;
-        } else {
-            return false;
-        }
+        return Pattern.compile(regEx).matcher(str).find();
     }
 }
 

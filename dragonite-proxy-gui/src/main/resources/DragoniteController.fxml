@@ -35,7 +35,6 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
                 <Label fx:id="lServer" text="Server"/>
@@ -44,16 +43,14 @@
                 <Label fx:id="lLocalPort" text="Local Port" GridPane.rowIndex="3"/>
                 <Label fx:id="lDownload" text="Download" GridPane.rowIndex="4"/>
                 <Label fx:id="lUpload" text="Upload" GridPane.rowIndex="5"/>
-                <Label fx:id="lLimit" text="Limit" GridPane.rowIndex="6"/>
-                <Label fx:id="lMTU" text="MTU" GridPane.rowIndex="7"/>
+                <Label fx:id="lMTU" text="MTU" GridPane.rowIndex="6"/>
                 <JFXTextField fx:id="tfServer" GridPane.columnIndex="1"/>
                 <JFXPasswordField fx:id="pfPassword" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <JFXTextField fx:id="tfServerPort" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <JFXTextField fx:id="tfLocalPort" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                 <JFXTextField fx:id="tfDownloadMbps" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                 <JFXTextField fx:id="tfUploadMbps" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                <JFXTextField fx:id="tfLimitMbps" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-                <JFXTextField fx:id="tfMTU" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                <JFXTextField fx:id="tfMTU" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
             </children>
         </GridPane>
         <ImageView fitHeight="81.0" fitWidth="119.0" layoutX="32.0" layoutY="36.0" pickOnBounds="true"
