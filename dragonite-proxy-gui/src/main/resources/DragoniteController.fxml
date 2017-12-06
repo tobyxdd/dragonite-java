@@ -90,10 +90,6 @@
                 </JFXTextField>
             </children>
         </GridPane>
-        <ImageView fitHeight="81.0" fitWidth="119.0" layoutX="32.0" layoutY="36.0" pickOnBounds="true"
-                   preserveRatio="true"/>
-        <ImageView fitHeight="81.0" fitWidth="119.0" layoutX="150.0" layoutY="36.0" pickOnBounds="true"
-                   preserveRatio="true"/>
     </children>
     <padding>
         <Insets bottom="2.0" right="2.0" top="2.0"/>
