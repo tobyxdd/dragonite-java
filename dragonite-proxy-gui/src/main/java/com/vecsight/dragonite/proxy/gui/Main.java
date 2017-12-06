@@ -18,11 +18,10 @@ public class Main extends Application {
         fxmlLoader.setLocation(getClass().getResource("/DragoniteController.fxml"));
         AnchorPane anchorPane = fxmlLoader.load();
         primaryStage.setTitle("DragoniteX");
-        primaryStage.setScene(new Scene(anchorPane, 860, 567));
+        primaryStage.setScene(new Scene(anchorPane, 1000, 740));
         primaryStage.setResizable(false);
         dragoniteController = fxmlLoader.getController();
-        dragoniteController.initLog();
-        dragoniteController.loadConfig();
+        dragoniteController.init();
 
 
         primaryStage.show();

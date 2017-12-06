@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXTextField;
 import com.vecsight.dragonite.proxy.config.ProxyClientConfig;
 import com.vecsight.dragonite.proxy.exception.IncorrectHeaderException;
 import com.vecsight.dragonite.proxy.exception.ServerRejectedException;
@@ -12,12 +15,10 @@ import com.vecsight.dragonite.proxy.gui.module.GuiConfig;
 import com.vecsight.dragonite.proxy.network.client.ProxyClient;
 import com.vecsight.dragonite.sdk.exception.DragoniteException;
 import com.vecsight.dragonite.sdk.exception.EncryptionException;
+import io.datafx.controller.ViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import lombok.Cleanup;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
@@ -26,7 +27,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /*******************************************************************************
@@ -36,23 +36,24 @@ import java.util.regex.Pattern;
  * Created by mritd on 17/11/28 下午9:40.
  * Description: DragoniteController
  *******************************************************************************/
+@ViewController(value = "/DragoniteController.fxml",title = "DragoniteX")
 public class DragoniteController {
     @FXML
-    private TextField tfServer;
+    private JFXTextField tfServer;
     @FXML
-    private TextField tfServerPort;
+    private JFXTextField tfServerPort;
     @FXML
-    private TextField tfLocalPort;
+    private JFXTextField tfLocalPort;
     @FXML
-    private PasswordField pfPassword;
+    private JFXPasswordField pfPassword;
     @FXML
-    private TextField tfDownloadMbps;
+    private JFXTextField tfDownloadMbps;
     @FXML
-    private TextField tfUploadMbps;
+    private JFXTextField tfUploadMbps;
     @FXML
-    private TextField tfMTU;
+    private JFXTextField tfMTU;
     @FXML
-    private TextArea taLogs;
+    private JFXTextArea taLogs;
 
     @FXML
     private Label lServer;
@@ -73,6 +74,53 @@ public class DragoniteController {
     private ProxyClient proxyClient;
 
     public static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
+
+
+    public void init(){
+        initValidate();
+        initLog();
+        loadConfig();
+    }
+
+
+    public void initValidate() {
+
+        tfServer.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfServer.validate();
+            }
+        });
+        tfServerPort.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfServerPort.validate();
+            }
+        });
+        tfLocalPort.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfLocalPort.validate();
+            }
+        });
+        pfPassword.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                pfPassword.validate();
+            }
+        });
+        tfDownloadMbps.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfDownloadMbps.validate();
+            }
+        });
+        tfUploadMbps.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfUploadMbps.validate();
+            }
+        });
+        tfMTU.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfMTU.validate();
+            }
+        });
+    }
 
 
     @FXML
