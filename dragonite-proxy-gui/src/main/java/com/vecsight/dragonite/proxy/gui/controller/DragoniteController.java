@@ -18,7 +18,6 @@ import com.vecsight.dragonite.sdk.exception.EncryptionException;
 import io.datafx.controller.ViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import lombok.Cleanup;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
@@ -36,7 +35,7 @@ import java.util.regex.Pattern;
  * Created by mritd on 17/11/28 下午9:40.
  * Description: DragoniteController
  *******************************************************************************/
-@ViewController(value = "/DragoniteController.fxml",title = "DragoniteX")
+@ViewController(value = "/DragoniteController.fxml", title = "DragoniteX")
 public class DragoniteController {
     @FXML
     private JFXTextField tfServer;
@@ -55,28 +54,13 @@ public class DragoniteController {
     @FXML
     private JFXTextArea taLogs;
 
-    @FXML
-    private Label lServer;
-    @FXML
-    private Label lPassword;
-    @FXML
-    private Label lServerPort;
-    @FXML
-    private Label lLocalPort;
-    @FXML
-    private Label lDownload;
-    @FXML
-    private Label lUpload;
-    @FXML
-    private Label lMTU;
-
     private ProxyClientConfig clientConfig;
     private ProxyClient proxyClient;
 
     public static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
 
 
-    public void init(){
+    public void init() {
         initValidate();
         initLog();
         loadConfig();

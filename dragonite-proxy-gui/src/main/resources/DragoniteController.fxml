@@ -4,9 +4,6 @@
 <?import com.jfoenix.validation.*?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0"
             prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
@@ -20,11 +17,6 @@
                    text="STOP" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
         <JFXButton fx:id="btSave" layoutX="313.0" layoutY="650.0" mnemonicParsing="false" onAction="#dragoniteProxySave"
                    text="SAVE" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
-        <MenuBar prefHeight="17.0" prefWidth="849.0">
-            <menus>
-                <Menu fx:id="menuAbout" mnemonicParsing="false" text="About"/>
-            </menus>
-        </MenuBar>
         <GridPane layoutX="60.0" layoutY="127.0" prefHeight="316.0" prefWidth="321.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="321.0"/>
