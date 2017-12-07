@@ -42,7 +42,6 @@ dependencies {
     compile 'io.datafx:flow:8.0.1'
     compile 'com.jfoenix:jfoenix:1.11.0'
     compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5'
-    compile 'com.github.dblock:oshi-core:3.4.0'
 }
 
 buildConfig {

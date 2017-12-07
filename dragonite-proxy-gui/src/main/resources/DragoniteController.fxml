@@ -20,12 +20,12 @@
                 <NumberAxis fx:id="lcCPUyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT" />
             </yAxis>
         </LineChart>
-        <LineChart fx:id="lcSpeed" layoutX="650.0" layoutY="55.0" prefHeight="200.0" prefWidth="300.0" minHeight="140.0"  minWidth="300" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" >
+        <LineChart fx:id="lcMemory" layoutX="650.0" layoutY="55.0" prefHeight="200.0" prefWidth="300.0" minHeight="140.0"  minWidth="300" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" >
             <xAxis>
-                <CategoryAxis fx:id="lcSpeedxAxis" side="BOTTOM" />
+                <CategoryAxis fx:id="lcMemoryxAxis" side="BOTTOM" />
             </xAxis>
             <yAxis>
-                <NumberAxis fx:id="lcSpeedyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT" />
+                <NumberAxis fx:id="lcMemoryyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT" />
             </yAxis>
         </LineChart>
         <JFXTextArea fx:id="taLogs" layoutX="368.0" layoutY="270.0" prefHeight="250.0" prefWidth="580.0"/>

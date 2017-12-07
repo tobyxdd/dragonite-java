@@ -19,9 +19,7 @@ import io.datafx.controller.ViewController;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import lombok.Cleanup;
 import org.apache.commons.lang3.RandomUtils;
@@ -29,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
@@ -67,7 +66,7 @@ public class DragoniteController {
     @FXML
     private LineChart<Number, Number> lcCPU;
     @FXML
-    private LineChart<Number, Number> lcSpeed;
+    private LineChart<Number, Number> lcMemory;
 
     public boolean isCancelled;
 
@@ -77,46 +76,50 @@ public class DragoniteController {
 
 
     public void init() {
-        initValidate();
         initLog();
+        initValidate();
         loadConfig();
         initMonitor();
     }
 
+    private void initLog() {
+
+        PrintStream printStream = new PrintStream(new LogOutputStream(taLogs));
+        System.setOut(printStream);
+        System.setErr(printStream);
+    }
 
     private void initMonitor() {
 
         XYChart.Series cpuSeries = new XYChart.Series<>();
         cpuSeries.setName("cpu");
         lcCPU.getData().add(cpuSeries);
-        ObservableList<XYChart.Data<String, Integer>> cpuInfoList = cpuSeries.getData();
+        ObservableList<XYChart.Data<String, Object>> cpuInfoList = cpuSeries.getData();
 
         XYChart.Series speedSeries = new XYChart.Series<>();
-        speedSeries.setName("speed");
-        lcSpeed.getData().add(speedSeries);
-        ObservableList<XYChart.Data<String, Integer>> speedInfoList = speedSeries.getData();
+        speedSeries.setName("memory");
+        lcMemory.getData().add(speedSeries);
+        ObservableList<XYChart.Data<String, Object>> speedInfoList = speedSeries.getData();
 
-        Task<List<XYChart.Data<String, Integer>>> cpuInfoTask = new Task<List<XYChart.Data<String, Integer>>>() {
+        Task<List<XYChart.Data<String, Object>>> cpuInfoTask = new Task<List<XYChart.Data<String, Object>>>() {
             @Override
-            protected List<XYChart.Data<String, Integer>> call() {
+            protected List<XYChart.Data<String, Object>> call() {
 
                 while (!isCancelled) {
                     try {
                         Thread.sleep(1000);
+                        List<XYChart.Data<String, Object>> data = new ArrayList<>(2);
+                        double cuuLoad = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
+                        long memoryUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
+                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()),cuuLoad));
+                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), memoryUse));
+                        updateValue(data);
                     } catch (InterruptedException e) {
                         Logger.error(e);
                     }
 
-                    List<XYChart.Data<String, Integer>> data = new ArrayList<>(2);
-                    data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), RandomUtils.nextInt(0, 100)));
-                    data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), RandomUtils.nextInt(0, 100)));
-
-                    updateValue(data);
                 }
-                List<XYChart.Data<String, Integer>> data = new ArrayList<>(2);
-                data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), RandomUtils.nextInt(0, 100)));
-                data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), RandomUtils.nextInt(0, 100)));
-                return data;
+                return null;
             }
         };
 
@@ -229,27 +232,16 @@ public class DragoniteController {
 
     @FXML
     public void dragoniteProxyStop() {
-
         if (proxyClient != null) proxyClient.close();
         Logger.info("DragoniteProxy Stoped!");
-
     }
 
     @FXML
     public void dragoniteProxySave() {
-
         saveConfig();
         Logger.info("Config saved...");
-
     }
 
-
-    private void initLog() {
-
-        PrintStream printStream = new PrintStream(new LogOutputStream(taLogs));
-        System.setOut(printStream);
-        System.setErr(printStream);
-    }
 
     private void loadConfig() {
 
