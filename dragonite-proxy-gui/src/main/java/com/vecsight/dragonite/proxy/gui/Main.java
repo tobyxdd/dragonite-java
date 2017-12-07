@@ -17,7 +17,7 @@ public class Main extends Application {
         fxmlLoader.setLocation(getClass().getResource("/DragoniteController.fxml"));
         AnchorPane anchorPane = fxmlLoader.load();
         primaryStage.setTitle("DragoniteX");
-        primaryStage.setScene(new Scene(anchorPane, 1000, 740));
+        primaryStage.setScene(new Scene(anchorPane, 1000, 680));
         primaryStage.setResizable(false);
         dragoniteController = fxmlLoader.getController();
         dragoniteController.init();
@@ -28,6 +28,7 @@ public class Main extends Application {
 
     @Override
     public void stop() throws Exception {
+        dragoniteController.isCancelled = true;
         dragoniteController.saveConfig();
     }
 

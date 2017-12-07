@@ -5,19 +5,38 @@
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0"
             prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.vecsight.dragonite.proxy.gui.controller.DragoniteController" stylesheets="Theme.css">
     <children>
-        <JFXTextArea fx:id="taLogs" layoutX="368.0" layoutY="132.0" prefHeight="460.0" prefWidth="580.0"/>
-        <JFXButton fx:id="btStart" layoutX="57.0" layoutY="650.0" mnemonicParsing="false"
+        <LineChart fx:id="lcCPU" layoutX="350.0" layoutY="55.0" prefHeight="200.0" prefWidth="300.0" minHeight="140.0"  minWidth="300" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" >
+            <xAxis>
+                <CategoryAxis fx:id="lcCPUxAxis" side="BOTTOM" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="lcCPUyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT" />
+            </yAxis>
+        </LineChart>
+        <LineChart fx:id="lcSpeed" layoutX="650.0" layoutY="55.0" prefHeight="200.0" prefWidth="300.0" minHeight="140.0"  minWidth="300" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" >
+            <xAxis>
+                <CategoryAxis fx:id="lcSpeedxAxis" side="BOTTOM" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="lcSpeedyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT" />
+            </yAxis>
+        </LineChart>
+        <JFXTextArea fx:id="taLogs" layoutX="368.0" layoutY="270.0" prefHeight="250.0" prefWidth="580.0"/>
+        <JFXButton fx:id="btStart" layoutX="57.0" layoutY="580.0" mnemonicParsing="false"
                    onAction="#dragoniteProxyStart"
                    text="START" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
-        <JFXButton fx:id="btStop" layoutX="186.0" layoutY="650.0" mnemonicParsing="false" onAction="#dragoniteProxyStop"
+        <JFXButton fx:id="btStop" layoutX="186.0" layoutY="580.0" mnemonicParsing="false" onAction="#dragoniteProxyStop"
                    text="STOP" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
-        <JFXButton fx:id="btSave" layoutX="313.0" layoutY="650.0" mnemonicParsing="false" onAction="#dragoniteProxySave"
+        <JFXButton fx:id="btSave" layoutX="313.0" layoutY="580.0" mnemonicParsing="false" onAction="#dragoniteProxySave"
                    text="SAVE" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
-        <GridPane layoutX="60.0" layoutY="127.0" prefHeight="316.0" prefWidth="321.0">
+        <GridPane layoutX="60.0" layoutY="55.0" prefHeight="316.0" prefWidth="321.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="321.0"/>
             </columnConstraints>

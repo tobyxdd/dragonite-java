@@ -16,14 +16,27 @@ import com.vecsight.dragonite.proxy.network.client.ProxyClient;
 import com.vecsight.dragonite.sdk.exception.DragoniteException;
 import com.vecsight.dragonite.sdk.exception.EncryptionException;
 import io.datafx.controller.ViewController;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import lombok.Cleanup;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 /*******************************************************************************
@@ -51,6 +64,12 @@ public class DragoniteController {
     private JFXTextField tfMTU;
     @FXML
     private JFXTextArea taLogs;
+    @FXML
+    private LineChart<Number, Number> lcCPU;
+    @FXML
+    private LineChart<Number, Number> lcSpeed;
+
+    public boolean isCancelled;
 
     private ProxyClient proxyClient;
 
@@ -61,6 +80,65 @@ public class DragoniteController {
         initValidate();
         initLog();
         loadConfig();
+        initMonitor();
+    }
+
+
+    private void initMonitor() {
+
+        XYChart.Series cpuSeries = new XYChart.Series<>();
+        cpuSeries.setName("cpu");
+        lcCPU.getData().add(cpuSeries);
+        ObservableList<XYChart.Data<String, Integer>> cpuInfoList = cpuSeries.getData();
+
+        XYChart.Series speedSeries = new XYChart.Series<>();
+        speedSeries.setName("speed");
+        lcSpeed.getData().add(speedSeries);
+        ObservableList<XYChart.Data<String, Integer>> speedInfoList = speedSeries.getData();
+
+        Task<List<XYChart.Data<String, Integer>>> cpuInfoTask = new Task<List<XYChart.Data<String, Integer>>>() {
+            @Override
+            protected List<XYChart.Data<String, Integer>> call() {
+
+                while (!isCancelled) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        Logger.error(e);
+                    }
+
+                    List<XYChart.Data<String, Integer>> data = new ArrayList<>(2);
+                    data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), RandomUtils.nextInt(0, 100)));
+                    data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), RandomUtils.nextInt(0, 100)));
+
+                    updateValue(data);
+                }
+                List<XYChart.Data<String, Integer>> data = new ArrayList<>(2);
+                data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), RandomUtils.nextInt(0, 100)));
+                data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), RandomUtils.nextInt(0, 100)));
+                return data;
+            }
+        };
+
+        cpuInfoTask.valueProperty().addListener((observableValue, oldData, newData) -> {
+
+            if (cpuInfoList.size() - 10 > 0) {
+                cpuInfoList.remove(0);
+            }
+            cpuInfoList.add(newData.get(0));
+
+            if (speedInfoList.size() - 10 > 0) {
+                speedInfoList.remove(0);
+            }
+            speedInfoList.add(newData.get(1));
+
+        });
+
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(cpuInfoTask);
+
+
     }
 
 

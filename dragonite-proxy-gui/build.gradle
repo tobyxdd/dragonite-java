@@ -34,6 +34,7 @@ dependencies {
     compile project(':dragonite-mux')
     compile project(':dragonite-utils')
     compile project(':dragonite-proxy')
+
     compile 'org.projectlombok:lombok:1.16.18'
     compile 'com.google.code.gson:gson:2.8.2'
     compile 'org.apache.commons:commons-lang3:3.7'
@@ -41,6 +42,7 @@ dependencies {
     compile 'io.datafx:flow:8.0.1'
     compile 'com.jfoenix:jfoenix:1.11.0'
     compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-5'
+    compile 'com.github.dblock:oshi-core:3.4.0'
 }
 
 buildConfig {
