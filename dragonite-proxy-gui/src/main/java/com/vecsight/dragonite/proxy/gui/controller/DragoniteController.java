@@ -174,11 +174,6 @@ public class DragoniteController {
                 tfUploadMbps.validate();
             }
         });
-        tfMTU.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) {
-                tfMTU.validate();
-            }
-        });
     }
 
 

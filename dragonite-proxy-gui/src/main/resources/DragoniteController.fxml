@@ -92,13 +92,8 @@
                         </RequiredFieldValidator>
                     </validators>
                 </JFXTextField>
-                <JFXTextField fx:id="tfMTU" promptText="MTU" labelFloat="true" GridPane.rowIndex="6">
-                    <validators>
-                        <RequiredFieldValidator message="Input Required!">
-                            <FontAwesomeIconView glyphName="WARNING" style="-fx-font-family: FontAwesome;"/>
-                        </RequiredFieldValidator>
-                    </validators>
-                </JFXTextField>
+                <JFXTextField fx:id="tfMTU" promptText="MTU" labelFloat="true" GridPane.rowIndex="6"/>
+
             </children>
         </GridPane>
     </children>
