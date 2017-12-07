@@ -16,7 +16,6 @@ import com.vecsight.dragonite.proxy.network.client.ProxyClient;
 import com.vecsight.dragonite.sdk.exception.DragoniteException;
 import com.vecsight.dragonite.sdk.exception.EncryptionException;
 import io.datafx.controller.ViewController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import lombok.Cleanup;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +24,6 @@ import org.pmw.tinylog.Logger;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.regex.Pattern;
 
 /*******************************************************************************
@@ -54,10 +52,9 @@ public class DragoniteController {
     @FXML
     private JFXTextArea taLogs;
 
-    private ProxyClientConfig clientConfig;
     private ProxyClient proxyClient;
 
-    public static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
+    private static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
 
 
     public void init() {
@@ -67,7 +64,7 @@ public class DragoniteController {
     }
 
 
-    public void initValidate() {
+    private void initValidate() {
 
         tfServer.focusedProperty().addListener((o, oldVal, newVal) -> {
             if (!newVal) {
@@ -108,7 +105,7 @@ public class DragoniteController {
 
 
     @FXML
-    public void dragoniteProxyStart(ActionEvent event) throws UnknownHostException {
+    public void dragoniteProxyStart() {
 
         if (StringUtils.isBlank(tfServer.getText())) {
             Logger.error("Server address is blank!");
@@ -141,15 +138,14 @@ public class DragoniteController {
         }
 
 
-        InetAddress serverAddress = InetAddress.getByName(tfServer.getText());
-        int serverPort = Integer.parseInt(tfServerPort.getText());
-        int localSocks5Port = Integer.parseInt(tfLocalPort.getText());
-        String serverPassword = pfPassword.getText();
-        int downloadMbps = Integer.parseInt(tfDownloadMbps.getText());
-        int uploadMbps = Integer.parseInt(tfUploadMbps.getText());
-
         try {
-            clientConfig = new ProxyClientConfig(new InetSocketAddress(serverAddress, serverPort), localSocks5Port, serverPassword, downloadMbps, uploadMbps);
+            InetAddress serverAddress = InetAddress.getByName(tfServer.getText());
+            int serverPort = Integer.parseInt(tfServerPort.getText());
+            int localSocks5Port = Integer.parseInt(tfLocalPort.getText());
+            String serverPassword = pfPassword.getText();
+            int downloadMbps = Integer.parseInt(tfDownloadMbps.getText());
+            int uploadMbps = Integer.parseInt(tfUploadMbps.getText());
+            ProxyClientConfig clientConfig = new ProxyClientConfig(new InetSocketAddress(serverAddress, serverPort), localSocks5Port, serverPassword, downloadMbps, uploadMbps);
             clientConfig.setMTU(StringUtils.isNotBlank(tfMTU.getText()) ? Integer.parseInt(tfMTU.getText()) : 1300);
             proxyClient = new ProxyClient(clientConfig);
         } catch (EncryptionException | IOException | ServerRejectedException | InterruptedException | DragoniteException | IncorrectHeaderException e) {
@@ -159,7 +155,7 @@ public class DragoniteController {
     }
 
     @FXML
-    public void dragoniteProxyStop(ActionEvent event) {
+    public void dragoniteProxyStop() {
 
         if (proxyClient != null) proxyClient.close();
         Logger.info("DragoniteProxy Stoped!");
@@ -167,7 +163,7 @@ public class DragoniteController {
     }
 
     @FXML
-    public void dragoniteProxySave(ActionEvent event) {
+    public void dragoniteProxySave() {
 
         saveConfig();
         Logger.info("Config saved...");
@@ -175,14 +171,14 @@ public class DragoniteController {
     }
 
 
-    public void initLog() {
+    private void initLog() {
 
         PrintStream printStream = new PrintStream(new LogOutputStream(taLogs));
         System.setOut(printStream);
         System.setErr(printStream);
     }
 
-    public void loadConfig() {
+    private void loadConfig() {
 
 
         try {
@@ -232,9 +228,9 @@ public class DragoniteController {
             @Cleanup JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
             GuiConfig config = new GuiConfig()
                     .setServerAddress(StringUtils.isNotBlank(tfServer.getText()) ? tfServer.getText() : "google.com")
-                    .setServerPort(StringUtils.isNotBlank(tfServerPort.getText()) ? Integer.parseInt(tfServerPort.getText()) : 9000)
+                    .setServerPort(StringUtils.isNotBlank(tfServerPort.getText()) ? Integer.parseInt(tfServerPort.getText()) : 5234)
                     .setServerPassword(StringUtils.isNotBlank(pfPassword.getText()) ? pfPassword.getText() : "jFThJnp2hppzzPJy")
-                    .setLocalSocks5Port(StringUtils.isNotBlank(tfLocalPort.getText()) ? Integer.parseInt(tfLocalPort.getText()) : 5234)
+                    .setLocalSocks5Port(StringUtils.isNotBlank(tfLocalPort.getText()) ? Integer.parseInt(tfLocalPort.getText()) : 4096)
                     .setDownloadMbps(StringUtils.isNotBlank(tfDownloadMbps.getText()) ? Integer.parseInt(tfDownloadMbps.getText()) : 100)
                     .setUploadMbps(StringUtils.isNotBlank(tfUploadMbps.getText()) ? Integer.parseInt(tfUploadMbps.getText()) : 10)
                     .setMTU(StringUtils.isNotBlank(tfMTU.getText()) ? Integer.parseInt(tfMTU.getText()) : 1300);
