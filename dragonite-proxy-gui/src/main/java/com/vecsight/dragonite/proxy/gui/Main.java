@@ -28,8 +28,9 @@ public class Main extends Application {
 
     @Override
     public void stop() throws Exception {
-        dragoniteController.isCancelled = true;
+        dragoniteController.isClosed = true;
         dragoniteController.saveConfig();
+        dragoniteController.dragoniteProxyStop();
     }
 
     public static void main(String[] args) {

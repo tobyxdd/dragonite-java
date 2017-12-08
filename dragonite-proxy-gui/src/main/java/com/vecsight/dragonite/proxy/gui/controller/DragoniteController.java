@@ -22,7 +22,6 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import lombok.Cleanup;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 
@@ -69,8 +68,10 @@ public class DragoniteController {
     private LineChart<Number, Number> lcMemory;
 
     public boolean isCancelled;
+    public boolean isClosed;
 
     private ProxyClient proxyClient;
+    private ExecutorService proxyExecutor;
 
     private static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
 
@@ -105,13 +106,13 @@ public class DragoniteController {
             @Override
             protected List<XYChart.Data<String, Object>> call() {
 
-                while (!isCancelled) {
+                while (!isClosed) {
                     try {
                         Thread.sleep(1000);
                         List<XYChart.Data<String, Object>> data = new ArrayList<>(2);
                         double cuuLoad = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
                         long memoryUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
-                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()),cuuLoad));
+                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), cuuLoad));
                         data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), memoryUse));
                         updateValue(data);
                     } catch (InterruptedException e) {
@@ -140,7 +141,6 @@ public class DragoniteController {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(monitorTask);
-
 
     }
 
@@ -214,25 +214,40 @@ public class DragoniteController {
         }
 
 
-        try {
-            InetAddress serverAddress = InetAddress.getByName(tfServer.getText());
-            int serverPort = Integer.parseInt(tfServerPort.getText());
-            int localSocks5Port = Integer.parseInt(tfLocalPort.getText());
-            String serverPassword = pfPassword.getText();
-            int downloadMbps = Integer.parseInt(tfDownloadMbps.getText());
-            int uploadMbps = Integer.parseInt(tfUploadMbps.getText());
-            ProxyClientConfig clientConfig = new ProxyClientConfig(new InetSocketAddress(serverAddress, serverPort), localSocks5Port, serverPassword, downloadMbps, uploadMbps);
-            clientConfig.setMTU(StringUtils.isNotBlank(tfMTU.getText()) ? Integer.parseInt(tfMTU.getText()) : 1300);
-            proxyClient = new ProxyClient(clientConfig);
-        } catch (EncryptionException | IOException | ServerRejectedException | InterruptedException | DragoniteException | IncorrectHeaderException e) {
-            Logger.error(e, "DragoniteProxy Start Failed");
-        }
+        Task<Boolean> proxyTask = new Task<Boolean>() {
+            @Override
+            protected Boolean call() {
+                try {
+                    InetAddress serverAddress = InetAddress.getByName(tfServer.getText());
+                    int serverPort = Integer.parseInt(tfServerPort.getText());
+                    int localSocks5Port = Integer.parseInt(tfLocalPort.getText());
+                    String serverPassword = pfPassword.getText();
+                    int downloadMbps = Integer.parseInt(tfDownloadMbps.getText());
+                    int uploadMbps = Integer.parseInt(tfUploadMbps.getText());
+                    ProxyClientConfig clientConfig = new ProxyClientConfig(new InetSocketAddress(serverAddress, serverPort), localSocks5Port, serverPassword, downloadMbps, uploadMbps);
+                    clientConfig.setMTU(StringUtils.isNotBlank(tfMTU.getText()) ? Integer.parseInt(tfMTU.getText()) : 1300);
+                    proxyClient = new ProxyClient(clientConfig);
+                    return true;
+                } catch (EncryptionException | IOException | ServerRejectedException | InterruptedException | DragoniteException | IncorrectHeaderException e) {
+                    Logger.error(e, "DragoniteProxy Start Failed");
+                    return false;
+                }
+            }
+        };
+        proxyExecutor = Executors.newSingleThreadExecutor();
+        proxyExecutor.submit(proxyTask);
 
     }
 
     @FXML
     public void dragoniteProxyStop() {
-        if (proxyClient != null) proxyClient.close();
+
+        if (proxyClient != null) {
+            proxyClient.close();
+            proxyExecutor.shutdown();
+            proxyClient = null;
+            proxyExecutor = null;
+        }
         Logger.info("DragoniteProxy Stoped!");
     }
 
