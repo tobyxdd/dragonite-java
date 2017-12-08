@@ -4,28 +4,29 @@
 <?import com.jfoenix.validation.*?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0"
             prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.vecsight.dragonite.proxy.gui.controller.DragoniteController" stylesheets="Theme.css">
     <children>
-        <LineChart fx:id="lcCPU" layoutX="350.0" layoutY="55.0" prefHeight="200.0" prefWidth="300.0" minHeight="140.0"  minWidth="300" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" >
+        <LineChart fx:id="lcSystemLoad" layoutX="350.0" layoutY="55.0" prefHeight="200.0" prefWidth="300.0" minHeight="140.0"
+                   minWidth="300" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1">
             <xAxis>
-                <CategoryAxis fx:id="lcCPUxAxis" side="BOTTOM" />
+                <CategoryAxis fx:id="lcSystemLoadxAxis" side="BOTTOM"/>
             </xAxis>
             <yAxis>
-                <NumberAxis fx:id="lcCPUyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT" />
+                <NumberAxis fx:id="lcSystemLoadyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT"/>
             </yAxis>
         </LineChart>
-        <LineChart fx:id="lcMemory" layoutX="650.0" layoutY="55.0" prefHeight="200.0" prefWidth="300.0" minHeight="140.0"  minWidth="300" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" >
+        <LineChart fx:id="lcMemory" layoutX="650.0" layoutY="55.0" prefHeight="200.0" prefWidth="300.0"
+                   minHeight="140.0" minWidth="300" xmlns="http://javafx.com/javafx/9"
+                   xmlns:fx="http://javafx.com/fxml/1">
             <xAxis>
-                <CategoryAxis fx:id="lcMemoryxAxis" side="BOTTOM" />
+                <CategoryAxis fx:id="lcMemoryxAxis" side="BOTTOM"/>
             </xAxis>
             <yAxis>
-                <NumberAxis fx:id="lcMemoryyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT" />
+                <NumberAxis fx:id="lcMemoryyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT"/>
             </yAxis>
         </LineChart>
         <JFXTextArea fx:id="taLogs" layoutX="368.0" layoutY="270.0" prefHeight="250.0" prefWidth="580.0"/>

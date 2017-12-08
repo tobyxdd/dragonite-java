@@ -64,7 +64,7 @@ public class DragoniteController {
     @FXML
     private JFXTextArea taLogs;
     @FXML
-    private LineChart<Number, Number> lcCPU;
+    private LineChart<Number, Number> lcSystemLoad;
     @FXML
     private LineChart<Number, Number> lcMemory;
 
@@ -92,8 +92,8 @@ public class DragoniteController {
     private void initMonitor() {
 
         XYChart.Series cpuSeries = new XYChart.Series<>();
-        cpuSeries.setName("cpu");
-        lcCPU.getData().add(cpuSeries);
+        cpuSeries.setName("systemload");
+        lcSystemLoad.getData().add(cpuSeries);
         ObservableList<XYChart.Data<String, Object>> cpuInfoList = cpuSeries.getData();
 
         XYChart.Series speedSeries = new XYChart.Series<>();
@@ -101,7 +101,7 @@ public class DragoniteController {
         lcMemory.getData().add(speedSeries);
         ObservableList<XYChart.Data<String, Object>> speedInfoList = speedSeries.getData();
 
-        Task<List<XYChart.Data<String, Object>>> cpuInfoTask = new Task<List<XYChart.Data<String, Object>>>() {
+        Task<List<XYChart.Data<String, Object>>> monitorTask = new Task<List<XYChart.Data<String, Object>>>() {
             @Override
             protected List<XYChart.Data<String, Object>> call() {
 
@@ -123,7 +123,7 @@ public class DragoniteController {
             }
         };
 
-        cpuInfoTask.valueProperty().addListener((observableValue, oldData, newData) -> {
+        monitorTask.valueProperty().addListener((observableValue, oldData, newData) -> {
 
             if (cpuInfoList.size() - 10 > 0) {
                 cpuInfoList.remove(0);
@@ -139,7 +139,7 @@ public class DragoniteController {
 
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(cpuInfoTask);
+        executor.submit(monitorTask);
 
 
     }
