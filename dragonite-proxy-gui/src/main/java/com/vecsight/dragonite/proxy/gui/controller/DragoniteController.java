@@ -108,7 +108,7 @@ public class DragoniteController {
 
                         Proxy dragoniteProxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", Integer.parseInt(tfLocalPort.getText())));
                         OkHttpClient client = new OkHttpClient.Builder()
-                                .connectTimeout(30, TimeUnit.SECONDS)
+                                .connectTimeout(10, TimeUnit.SECONDS)
                                 .proxy(dragoniteProxy)
                                 .build();
                         Request request = new Request.Builder()
