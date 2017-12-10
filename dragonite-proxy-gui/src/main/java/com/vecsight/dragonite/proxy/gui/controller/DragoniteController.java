@@ -72,6 +72,7 @@ public class DragoniteController {
     private LineChart<Number, Number> lcMemory;
 
     public boolean isClosed;
+    private static boolean isStarted;
     private ProxyClient proxyClient;
     private ExecutorService proxyExecutor;
     private static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
@@ -106,6 +107,7 @@ public class DragoniteController {
                                 .build();
                         Response response = client.newCall(request).execute();
                         updateValue(response.isSuccessful());
+                        response.close();
 
                     } catch (IOException | InterruptedException ignore) {
                         updateValue(false);
@@ -224,6 +226,11 @@ public class DragoniteController {
     @FXML
     public void dragoniteProxyStart() {
 
+        if (isStarted){
+            Logger.warn("Proxy started!");
+            return;
+        }
+
         if (StringUtils.isBlank(tfServer.getText())) {
             Logger.error("Server address is blank!");
             return;
@@ -254,6 +261,7 @@ public class DragoniteController {
             return;
         }
 
+        isStarted = true;
 
         Task<Boolean> proxyTask = new Task<Boolean>() {
             @Override
@@ -289,6 +297,7 @@ public class DragoniteController {
             proxyClient = null;
             proxyExecutor = null;
         }
+        isStarted = false;
         Logger.info("DragoniteProxy Stoped!");
     }
 
