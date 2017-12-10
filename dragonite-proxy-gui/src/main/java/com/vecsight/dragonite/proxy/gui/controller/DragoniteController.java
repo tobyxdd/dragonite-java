@@ -14,12 +14,14 @@ import com.vecsight.dragonite.proxy.gui.module.GuiConfig;
 import com.vecsight.dragonite.proxy.network.client.ProxyClient;
 import com.vecsight.dragonite.sdk.exception.DragoniteException;
 import com.vecsight.dragonite.sdk.exception.EncryptionException;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import io.datafx.controller.ViewController;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import lombok.Cleanup;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -70,6 +72,14 @@ public class DragoniteController {
     private LineChart<Number, Number> lcSystemLoad;
     @FXML
     private LineChart<Number, Number> lcMemory;
+    @FXML
+    private FontAwesomeIconView faiConfigSaved;
+    @FXML
+    private Label lbConfigSaved;
+    @FXML
+    private FontAwesomeIconView faiStarted;
+    @FXML
+    private Label lbStarted;
 
     public boolean isClosed;
     private static boolean isStarted;
@@ -127,8 +137,8 @@ public class DragoniteController {
             else pbGoogleStatus.setProgress(-1.0);
         });
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(checkGoogleConnect);
+        ExecutorService googleMonitorExecutor = Executors.newSingleThreadExecutor();
+        googleMonitorExecutor.submit(checkGoogleConnect);
 
     }
 
@@ -182,8 +192,8 @@ public class DragoniteController {
         });
 
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(monitorTask);
+        ExecutorService systemMonitorExecutor = Executors.newSingleThreadExecutor();
+        systemMonitorExecutor.submit(monitorTask);
 
     }
 
@@ -226,7 +236,7 @@ public class DragoniteController {
     @FXML
     public void dragoniteProxyStart() {
 
-        if (isStarted){
+        if (isStarted) {
             Logger.warn("Proxy started!");
             return;
         }
@@ -283,6 +293,18 @@ public class DragoniteController {
                 }
             }
         };
+
+
+        proxyTask.valueProperty().addListener((observableValue, oldData, newData) -> {
+            if(newData){
+                faiStarted.setGlyphName("PLAY_CIRCLE");
+                lbStarted.setText("Proxy Started ...");
+            }else {
+                faiStarted.setGlyphName("STOP_CIRCLE");
+                lbStarted.setText("Proxy Stopped ...");
+            }
+        });
+
         proxyExecutor = Executors.newSingleThreadExecutor();
         proxyExecutor.submit(proxyTask);
 
@@ -298,13 +320,15 @@ public class DragoniteController {
             proxyExecutor = null;
         }
         isStarted = false;
-        Logger.info("DragoniteProxy Stoped!");
+        faiStarted.setGlyphName("STOP_CIRCLE");
+        lbStarted.setText("Proxy Stopped ...");
+        Logger.info("DragoniteProxy stopped!");
     }
 
     @FXML
     public void dragoniteProxySave() {
         saveConfig();
-        Logger.info("Config saved...");
+        Logger.info("Config Saved ...");
     }
 
 
@@ -319,6 +343,9 @@ public class DragoniteController {
                 Logger.warn("Config file not found!");
                 return;
             }
+
+            faiConfigSaved.setGlyphName("CHECK");
+            lbConfigSaved.setText("Config Saved ...");
 
             @Cleanup InputStream input = new FileInputStream(configFile);
             @Cleanup JsonReader reader = new JsonReader(new InputStreamReader(input));
@@ -370,6 +397,8 @@ public class DragoniteController {
             new Gson().toJson(config, new TypeToken<GuiConfig>() {
             }.getType(), writer);
             writer.flush();
+            faiConfigSaved.setGlyphName("CHECK");
+            lbConfigSaved.setText("Config Saved ...");
 
         } catch (IOException e) {
             Logger.error(e, "Config save Failed");

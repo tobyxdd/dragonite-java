@@ -7,6 +7,11 @@
     -fx-text-fill: WHITE;
 }
 
+.icons-started {
+    -jfx-rippler-fill: #3f80f4;
+    -jfx-mask-type: CIRCLE;
+}
+
 /*
  *	Apply google Roboto font to all UI components
  */
@@ -122,10 +127,6 @@
     -jfx-mask-type: CIRCLE;
 }
 
-.icons-rippler1 {
-    -jfx-rippler-fill: #4285F4;
-    -jfx-mask-type: CIRCLE;
-}
 
 .icons-rippler:hover {
     -fx-cursor: hand;
@@ -976,13 +977,6 @@
     -fx-font-size: 1.0em;
 }
 
-.jfx-scroll-pane .main-header {
-    -fx-background-image: url("../bg1.jpg");
-}
-
-.jfx-scroll-pane .condensed-header {
-    -fx-background-image: url("../bg4.jpg");
-}
 
 /*******************************************************************************
 *                                                                              *
