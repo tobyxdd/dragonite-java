@@ -87,152 +87,6 @@ public class DragoniteController {
     private ExecutorService proxyExecutor;
     private static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
 
-
-    public void init() {
-        initValidate();
-        initSystemMonitor();
-        initGoogleMonitor();
-        loadConfig();
-    }
-
-
-    private void initGoogleMonitor() {
-
-        Task<Boolean> checkGoogleConnect = new Task<Boolean>() {
-            @Override
-            protected Boolean call() {
-
-                while (!isClosed) {
-                    try {
-                        Thread.sleep(30 * 1000);
-
-                        Proxy dragoniteProxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", Integer.parseInt(tfLocalPort.getText())));
-                        OkHttpClient client = new OkHttpClient.Builder()
-                                .connectTimeout(10, TimeUnit.SECONDS)
-                                .proxy(dragoniteProxy)
-                                .build();
-                        Request request = new Request.Builder()
-                                .url("https://www.google.com")
-                                .get()
-                                .build();
-                        Response response = client.newCall(request).execute();
-                        updateValue(response.isSuccessful());
-                        response.close();
-
-                    } catch (IOException | InterruptedException ignore) {
-                        updateValue(false);
-                    }
-
-                }
-
-                return false;
-            }
-        };
-
-        checkGoogleConnect.valueProperty().addListener((observableValue, oldData, newData) -> {
-
-            Logger.info("Google connection status ==> " + newData);
-
-            if (newData) pbGoogleStatus.setProgress(1.0);
-            else pbGoogleStatus.setProgress(-1.0);
-        });
-
-        ExecutorService googleMonitorExecutor = Executors.newSingleThreadExecutor();
-        googleMonitorExecutor.submit(checkGoogleConnect);
-
-    }
-
-
-    private void initSystemMonitor() {
-
-        XYChart.Series cpuSeries = new XYChart.Series<>();
-        cpuSeries.setName("systemload");
-        lcSystemLoad.getData().add(cpuSeries);
-        ObservableList<XYChart.Data<String, Object>> cpuInfoList = cpuSeries.getData();
-
-        XYChart.Series speedSeries = new XYChart.Series<>();
-        speedSeries.setName("memory");
-        lcMemory.getData().add(speedSeries);
-        ObservableList<XYChart.Data<String, Object>> speedInfoList = speedSeries.getData();
-
-        Task<List<XYChart.Data<String, Object>>> monitorTask = new Task<List<XYChart.Data<String, Object>>>() {
-            @Override
-            protected List<XYChart.Data<String, Object>> call() {
-
-                while (!isClosed) {
-                    try {
-                        Thread.sleep(1000);
-                        List<XYChart.Data<String, Object>> data = new ArrayList<>(2);
-                        double systemLoad = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
-                        long memoryUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
-                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), systemLoad));
-                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), memoryUse));
-                        updateValue(data);
-                    } catch (InterruptedException e) {
-                        Logger.error(e);
-                    }
-
-                }
-                return null;
-            }
-        };
-
-        monitorTask.valueProperty().addListener((observableValue, oldData, newData) -> {
-
-            if (cpuInfoList.size() - 10 > 0) {
-                cpuInfoList.remove(0);
-            }
-            cpuInfoList.add(newData.get(0));
-
-            if (speedInfoList.size() - 10 > 0) {
-                speedInfoList.remove(0);
-            }
-            speedInfoList.add(newData.get(1));
-
-        });
-
-
-        ExecutorService systemMonitorExecutor = Executors.newSingleThreadExecutor();
-        systemMonitorExecutor.submit(monitorTask);
-
-    }
-
-
-    private void initValidate() {
-
-        tfServer.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) {
-                tfServer.validate();
-            }
-        });
-        tfServerPort.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) {
-                tfServerPort.validate();
-            }
-        });
-        tfLocalPort.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) {
-                tfLocalPort.validate();
-            }
-        });
-        pfPassword.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) {
-                pfPassword.validate();
-            }
-        });
-        tfDownloadMbps.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) {
-                tfDownloadMbps.validate();
-            }
-        });
-        tfUploadMbps.focusedProperty().addListener((o, oldVal, newVal) -> {
-            if (!newVal) {
-                tfUploadMbps.validate();
-            }
-        });
-    }
-
-
     @FXML
     public void dragoniteProxyStart() {
 
@@ -332,6 +186,148 @@ public class DragoniteController {
     }
 
 
+    public void init() {
+        initValidate();
+        initSystemMonitor();
+        initGoogleMonitor();
+        loadConfig();
+    }
+
+    private void initValidate() {
+
+        tfServer.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfServer.validate();
+            }
+        });
+        tfServerPort.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfServerPort.validate();
+            }
+        });
+        tfLocalPort.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfLocalPort.validate();
+            }
+        });
+        pfPassword.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                pfPassword.validate();
+            }
+        });
+        tfDownloadMbps.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfDownloadMbps.validate();
+            }
+        });
+        tfUploadMbps.focusedProperty().addListener((o, oldVal, newVal) -> {
+            if (!newVal) {
+                tfUploadMbps.validate();
+            }
+        });
+    }
+
+
+    private void initSystemMonitor() {
+
+        XYChart.Series cpuSeries = new XYChart.Series<>();
+        cpuSeries.setName("systemload");
+        lcSystemLoad.getData().add(cpuSeries);
+        ObservableList<XYChart.Data<String, Object>> cpuInfoList = cpuSeries.getData();
+
+        XYChart.Series speedSeries = new XYChart.Series<>();
+        speedSeries.setName("memory");
+        lcMemory.getData().add(speedSeries);
+        ObservableList<XYChart.Data<String, Object>> speedInfoList = speedSeries.getData();
+
+        Task<List<XYChart.Data<String, Object>>> monitorTask = new Task<List<XYChart.Data<String, Object>>>() {
+            @Override
+            protected List<XYChart.Data<String, Object>> call() {
+
+                while (!isClosed) {
+                    try {
+                        Thread.sleep(1000);
+                        List<XYChart.Data<String, Object>> data = new ArrayList<>(2);
+                        double systemLoad = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
+                        long memoryUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
+                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), systemLoad));
+                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), memoryUse));
+                        updateValue(data);
+                    } catch (InterruptedException e) {
+                        Logger.error(e);
+                    }
+
+                }
+                return null;
+            }
+        };
+
+        monitorTask.valueProperty().addListener((observableValue, oldData, newData) -> {
+
+            if (cpuInfoList.size() - 10 > 0) {
+                cpuInfoList.remove(0);
+            }
+            cpuInfoList.add(newData.get(0));
+
+            if (speedInfoList.size() - 10 > 0) {
+                speedInfoList.remove(0);
+            }
+            speedInfoList.add(newData.get(1));
+
+        });
+
+
+        ExecutorService systemMonitorExecutor = Executors.newSingleThreadExecutor();
+        systemMonitorExecutor.submit(monitorTask);
+
+    }
+
+    private void initGoogleMonitor() {
+
+        Task<Boolean> checkGoogleConnect = new Task<Boolean>() {
+            @Override
+            protected Boolean call() {
+
+                while (!isClosed) {
+                    try {
+                        Thread.sleep(30 * 1000);
+
+                        Proxy dragoniteProxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", Integer.parseInt(tfLocalPort.getText())));
+                        OkHttpClient client = new OkHttpClient.Builder()
+                                .connectTimeout(10, TimeUnit.SECONDS)
+                                .proxy(dragoniteProxy)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("https://www.google.com")
+                                .get()
+                                .build();
+                        Response response = client.newCall(request).execute();
+                        updateValue(response.isSuccessful());
+                        response.close();
+
+                    } catch (IOException | InterruptedException ignore) {
+                        updateValue(false);
+                    }
+
+                }
+
+                return false;
+            }
+        };
+
+        checkGoogleConnect.valueProperty().addListener((observableValue, oldData, newData) -> {
+
+            Logger.info("Google connection status ==> " + newData);
+
+            if (newData) pbGoogleStatus.setProgress(1.0);
+            else pbGoogleStatus.setProgress(-1.0);
+        });
+
+        ExecutorService googleMonitorExecutor = Executors.newSingleThreadExecutor();
+        googleMonitorExecutor.submit(checkGoogleConnect);
+
+    }
+
     private void loadConfig() {
 
 
@@ -350,6 +346,8 @@ public class DragoniteController {
             @Cleanup InputStream input = new FileInputStream(configFile);
             @Cleanup JsonReader reader = new JsonReader(new InputStreamReader(input));
             GuiConfig config = new Gson().fromJson(reader, GuiConfig.class);
+            if (config == null) return;
+
             Logger.info(config);
 
             tfServer.setText(config.getServerAddress());
