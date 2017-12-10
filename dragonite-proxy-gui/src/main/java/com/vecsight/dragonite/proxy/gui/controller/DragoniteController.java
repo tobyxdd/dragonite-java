@@ -5,12 +5,11 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
 import com.vecsight.dragonite.proxy.config.ProxyClientConfig;
 import com.vecsight.dragonite.proxy.exception.IncorrectHeaderException;
 import com.vecsight.dragonite.proxy.exception.ServerRejectedException;
-import com.vecsight.dragonite.proxy.gui.log.LogOutputStream;
 import com.vecsight.dragonite.proxy.gui.module.GuiConfig;
 import com.vecsight.dragonite.proxy.network.client.ProxyClient;
 import com.vecsight.dragonite.sdk.exception.DragoniteException;
@@ -22,6 +21,9 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import lombok.Cleanup;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.pmw.tinylog.Logger;
 
@@ -29,12 +31,14 @@ import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /*******************************************************************************
@@ -61,36 +65,73 @@ public class DragoniteController {
     @FXML
     private JFXTextField tfMTU;
     @FXML
-    private JFXTextArea taLogs;
+    private JFXProgressBar pbGoogleStatus;
     @FXML
     private LineChart<Number, Number> lcSystemLoad;
     @FXML
     private LineChart<Number, Number> lcMemory;
 
-    public boolean isCancelled;
     public boolean isClosed;
-
     private ProxyClient proxyClient;
     private ExecutorService proxyExecutor;
-
     private static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
 
 
     public void init() {
-        initLog();
         initValidate();
+        initSystemMonitor();
+        initGoogleMonitor();
         loadConfig();
-        initMonitor();
     }
 
-    private void initLog() {
 
-        PrintStream printStream = new PrintStream(new LogOutputStream(taLogs));
-        System.setOut(printStream);
-        System.setErr(printStream);
+    private void initGoogleMonitor() {
+
+        Task<Boolean> checkGoogleConnect = new Task<Boolean>() {
+            @Override
+            protected Boolean call() {
+
+                while (!isClosed) {
+                    try {
+                        Thread.sleep(30 * 1000);
+
+                        Proxy dragoniteProxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress("127.0.0.1", Integer.parseInt(tfLocalPort.getText())));
+                        OkHttpClient client = new OkHttpClient.Builder()
+                                .connectTimeout(30, TimeUnit.SECONDS)
+                                .proxy(dragoniteProxy)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("https://www.google.com")
+                                .get()
+                                .build();
+                        Response response = client.newCall(request).execute();
+                        updateValue(response.isSuccessful());
+
+                    } catch (IOException | InterruptedException ignore) {
+                        updateValue(false);
+                    }
+
+                }
+
+                return false;
+            }
+        };
+
+        checkGoogleConnect.valueProperty().addListener((observableValue, oldData, newData) -> {
+
+            Logger.info("Google connection status ==> " + newData);
+
+            if (newData) pbGoogleStatus.setProgress(1.0);
+            else pbGoogleStatus.setProgress(-1.0);
+        });
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(checkGoogleConnect);
+
     }
 
-    private void initMonitor() {
+
+    private void initSystemMonitor() {
 
         XYChart.Series cpuSeries = new XYChart.Series<>();
         cpuSeries.setName("systemload");
@@ -110,9 +151,9 @@ public class DragoniteController {
                     try {
                         Thread.sleep(1000);
                         List<XYChart.Data<String, Object>> data = new ArrayList<>(2);
-                        double cuuLoad = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
+                        double systemLoad = ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
                         long memoryUse = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024;
-                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), cuuLoad));
+                        data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), systemLoad));
                         data.add(new XYChart.Data<>(new SimpleDateFormat("ss").format(new Date()), memoryUse));
                         updateValue(data);
                     } catch (InterruptedException e) {
@@ -191,24 +232,24 @@ public class DragoniteController {
             Logger.error("Server password is blank! ");
             return;
         }
-        if (StringUtils.isBlank(tfServerPort.getText()) || !isNumeric(tfServerPort.getText())) {
+        if (StringUtils.isBlank(tfServerPort.getText()) || isNotNumeric(tfServerPort.getText())) {
             Logger.error("Server port is blank or format is incorrect!");
             return;
         }
-        if (StringUtils.isBlank(tfLocalPort.getText()) || !isNumeric(tfLocalPort.getText())) {
+        if (StringUtils.isBlank(tfLocalPort.getText()) || isNotNumeric(tfLocalPort.getText())) {
             Logger.error("Local socks5 port is blank or format is incorrect!");
             return;
         }
-        if (StringUtils.isBlank(tfDownloadMbps.getText()) || !isNumeric(tfDownloadMbps.getText())) {
+        if (StringUtils.isBlank(tfDownloadMbps.getText()) || isNotNumeric(tfDownloadMbps.getText())) {
             Logger.error("Download mbps is blank or format is incorrect!");
             return;
         }
-        if (StringUtils.isBlank(tfUploadMbps.getText()) || !isNumeric(tfUploadMbps.getText())) {
+        if (StringUtils.isBlank(tfUploadMbps.getText()) || isNotNumeric(tfUploadMbps.getText())) {
             Logger.error("Upload mbps is blank or format is incorrect!");
             return;
         }
 
-        if (StringUtils.isNotBlank(tfMTU.getText()) && !isNumeric(tfMTU.getText())) {
+        if (StringUtils.isNotBlank(tfMTU.getText()) && isNotNumeric(tfMTU.getText())) {
             Logger.error("MTU format is incorrect!");
             return;
         }
@@ -327,9 +368,9 @@ public class DragoniteController {
     }
 
 
-    private boolean isNumeric(String str) {
+    private boolean isNotNumeric(String str) {
         String regEx = "^[0-9]+$";
-        return Pattern.compile(regEx).matcher(str).find();
+        return !Pattern.compile(regEx).matcher(str).find();
     }
 }
 

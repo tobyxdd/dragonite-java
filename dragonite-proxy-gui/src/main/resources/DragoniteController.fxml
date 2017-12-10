@@ -29,7 +29,7 @@
                 <NumberAxis fx:id="lcMemoryyAxis" prefHeight="109.0" prefWidth="26.0" side="LEFT"/>
             </yAxis>
         </LineChart>
-        <JFXTextArea fx:id="taLogs" layoutX="368.0" layoutY="270.0" prefHeight="250.0" prefWidth="580.0"/>
+        <JFXProgressBar fx:id="pbGoogleStatus" layoutX="450.0" layoutY="600.0" prefWidth="100.0" />
         <JFXButton fx:id="btStart" layoutX="57.0" layoutY="580.0" mnemonicParsing="false"
                    onAction="#dragoniteProxyStart"
                    text="START" style="-jfx-button-type: RAISED" styleClass="button-raised"/>
