@@ -22,7 +22,6 @@ public class Main extends Application {
         dragoniteController = fxmlLoader.getController();
         dragoniteController.init();
 
-
         primaryStage.show();
     }
 
@@ -31,6 +30,7 @@ public class Main extends Application {
         dragoniteController.isClosed = true;
         dragoniteController.saveConfig();
         dragoniteController.dragoniteProxyStop();
+        System.exit(0);
     }
 
     public static void main(String[] args) {

@@ -127,6 +127,10 @@
     -jfx-mask-type: CIRCLE;
 }
 
+.icons-rippler1 {
+    -jfx-rippler-fill: #4285F4;
+    -jfx-mask-type: CIRCLE;
+}
 
 .icons-rippler:hover {
     -fx-cursor: hand;
@@ -274,15 +278,16 @@
     -fx-fill: black;
 }
 
-.jfx-slider:disabled {
-    -fx-opacity: 0.4;
-}
-
 /*******************************************************
 *                           						   *
 * For the main demo sliders 						   *
 *                          							   *
 *******************************************************/
+
+.jfx-slider-colored{
+    -jfx-default-thumb: #5264AE;
+    -jfx-default-track: #212121;
+}
 
 .jfx-slider-style {
     -jfx-indicator-position: right;
@@ -296,6 +301,10 @@
     -fx-background-color: #ff5252;
     -fx-pref-height: 5px;
     -fx-pref-width: 5px;
+}
+
+.jfx-slider-style .animated-thumb{
+    -fx-background-color: darkorange;
 }
 
 .jfx-slider-style .sliderValue {
@@ -502,6 +511,12 @@
     -fx-background-color: BLACK;
 }
 
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
+/*******************************************************************************/
 /*******************************************************************************
 *                                                                              *
 * JFX SUBLIST IMPORTANT                                                        *
@@ -775,6 +790,16 @@
     -fx-border-width: 0 4 4 4;
 }
 
+.jfx-decorator .jfx-decorator-title-container .jfx-decorator-text {
+    -fx-fill: WHITE;
+    -fx-font-size: 16;
+}
+
+.jfx-decorator .jfx-decorator-title-container .jfx-svg-glyph {
+    -fx-shape: "M512 682c-128.024-99.309-255.626-199.040-384-298l384-298 384 298c-128.375 98.958-255.974 198.693-384 298zM512 792l314-246 70 54-384 298-384-298 70-54z";
+    -jfx-size: 15;
+    -fx-background-color: WHITE;
+}
 /*******************************************************************************
 *                                                                              *
 * Tree Table View                                                              *
@@ -976,6 +1001,7 @@
     -fx-fill: #D34336;
     -fx-font-size: 1.0em;
 }
+
 
 
 /*******************************************************************************
