@@ -50,7 +50,6 @@ import java.util.regex.Pattern;
  * Created by mritd on 17/11/28 下午9:40.
  * Description: DragoniteController
  *******************************************************************************/
-@ViewController(value = "/DragoniteController.fxml", title = "DragoniteX")
 public class DragoniteController {
     @FXML
     private JFXTextField tfServer;
@@ -386,7 +385,7 @@ public class DragoniteController {
                     .setServerAddress(StringUtils.isNotBlank(tfServer.getText()) ? tfServer.getText() : "google.com")
                     .setServerPort(StringUtils.isNotBlank(tfServerPort.getText()) ? Integer.parseInt(tfServerPort.getText()) : 5234)
                     .setServerPassword(StringUtils.isNotBlank(pfPassword.getText()) ? pfPassword.getText() : "jFThJnp2hppzzPJy")
-                    .setLocalSocks5Port(StringUtils.isNotBlank(tfLocalPort.getText()) ? Integer.parseInt(tfLocalPort.getText()) : 4096)
+                    .setLocalSocks5Port(StringUtils.isNotBlank(tfLocalPort.getText()) ? Integer.parseInt(tfLocalPort.getText()) : 1080)
                     .setDownloadMbps(StringUtils.isNotBlank(tfDownloadMbps.getText()) ? Integer.parseInt(tfDownloadMbps.getText()) : 100)
                     .setUploadMbps(StringUtils.isNotBlank(tfUploadMbps.getText()) ? Integer.parseInt(tfUploadMbps.getText()) : 10)
                     .setMTU(StringUtils.isNotBlank(tfMTU.getText()) ? Integer.parseInt(tfMTU.getText()) : 1300);
