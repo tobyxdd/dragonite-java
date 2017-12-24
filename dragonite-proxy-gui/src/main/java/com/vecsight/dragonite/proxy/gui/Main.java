@@ -86,7 +86,6 @@ public class Main extends Application {
             aboutItem.addActionListener(aboutListener);
             popup.add(aboutItem);
 
-
             MenuItem exitItem = new MenuItem("Exit");
             exitItem.addActionListener(closeListener);
             popup.add(exitItem);
