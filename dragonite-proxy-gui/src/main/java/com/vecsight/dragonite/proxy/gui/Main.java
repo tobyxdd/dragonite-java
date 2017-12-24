@@ -16,7 +16,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/DragoniteController.fxml"));
         AnchorPane anchorPane = fxmlLoader.load();
-        primaryStage.setTitle("DragoniteX");
+        primaryStage.setTitle("Dragonite Proxy X");
         primaryStage.setScene(new Scene(anchorPane, 1000, 680));
         primaryStage.setResizable(false);
         dragoniteController = fxmlLoader.getController();
