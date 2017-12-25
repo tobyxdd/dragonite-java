@@ -7,28 +7,35 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+        classpath "gradle.plugin.edu.sc.seis:macAppBundle:2.1.9"
     }
 }
 
 plugins {
+    id 'idea'
     id 'java'
     id 'com.github.johnrengelman.shadow' version '2.0.2'
     id 'de.fuerstenau.buildconfig' version '1.1.8'
-    id 'idea'
+    id "edu.sc.seis.macAppBundle" version "2.1.9"
 }
 
-group 'com.vecsight.dragonite'
-version '0.3.1'
-
-
+group = 'com.vecsight.dragonite'
+version = '0.3.1'
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
     jcenter()
+}
+
+buildConfig {
+    clsName = 'ProxyBuildConfig'
 }
 
 dependencies {
@@ -51,7 +58,6 @@ dependencies {
 shadowJar {
     baseName = 'dragonite-proxy-gui'
     classifier = null
-    version = '0.3.1'
     configurations = [project.configurations.compile]
 }
 
@@ -61,6 +67,11 @@ jar {
     }
 }
 
-buildConfig {
-    clsName = 'ProxyBuildConfig'
+macAppBundle {
+    mainClassName = "com.vecsight.dragonite.proxy.gui.Main"
+    icon = 'src/main/resources/Dragonite-Proxy-X.icns'
+    appName= 'Dragonite Proxy X'
+    bundleJRE = true
+    runtimeConfigurationName = 'shadow'
+    jarTask = 'shadowJar'
 }
