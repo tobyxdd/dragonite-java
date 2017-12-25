@@ -39,13 +39,6 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-//    @Override
-//    public void stop(){
-//        dragoniteController.isClosed = true;
-//        dragoniteController.saveConfig();
-//        dragoniteController.dragoniteProxyStop();
-//        System.exit(0);
-//    }
 
     public static void main(String[] args) {
         launch(args);
