@@ -84,7 +84,7 @@ public class DragoniteController {
     private static boolean isStarted;
     private ProxyClient proxyClient;
     private ExecutorService proxyExecutor;
-    private static final String CONFIG_PATH = "./dragonite-proxy-gui.json";
+    private static final String CONFIG_PATH = ".dragonite/dragonite-proxy-gui.json";
 
     @FXML
     public void dragoniteProxyStart() {
