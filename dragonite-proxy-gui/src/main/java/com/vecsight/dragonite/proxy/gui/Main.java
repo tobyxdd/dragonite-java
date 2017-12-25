@@ -19,7 +19,6 @@ public class Main extends javafx.application.Application {
 
     private DragoniteController dragoniteController;
 
-    private boolean firstTime;
     private TrayIcon trayIcon;
 
     @Override
@@ -97,20 +96,10 @@ public class Main extends javafx.application.Application {
     }
 
 
-    private void showProgramIsMinimizedMsg() {
-        if (firstTime) {
-            trayIcon.displayMessage("Some message.",
-                    "Some other message.",
-                    TrayIcon.MessageType.INFO);
-            firstTime = false;
-        }
-    }
-
     private void hide(final Stage stage) {
         Platform.runLater(() -> {
             if (SystemTray.isSupported()) {
                 stage.hide();
-                showProgramIsMinimizedMsg();
             } else {
                 dragoniteController.isClosed = true;
                 dragoniteController.saveConfig();
