@@ -51,7 +51,7 @@ public class Main extends javafx.application.Application {
             SystemTray tray = SystemTray.getSystemTray();
 
             // load an image
-            BufferedImage image = ImageIO.read(Main.class.getResource("/Dragonite-64.png"));
+            BufferedImage image = ImageIO.read(Main.class.getResource("/Dragonite-Proxy-X.png"));
 
             stage.setOnCloseRequest(t -> hide(stage));
 
