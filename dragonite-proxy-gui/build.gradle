@@ -80,6 +80,9 @@ macAppBundle {
 
 launch4j {
     outfile = 'Dragonite Proxy X.exe'
+    initialHeapSize = 128
+    maxHeapSize = 256
+    supportUrl = 'https://github.com/dragonite-network/dragonite-java/issues'
     copyConfigurable = project.tasks.shadowJar.outputs.files
     icon = new File("").getAbsolutePath()+'/src/main/resources/Dragonite-Proxy-X.ico'
 }
