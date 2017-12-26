@@ -83,6 +83,10 @@ public class Main extends javafx.application.Application {
 
             // construct a TrayIcon
             trayIcon = new TrayIcon(image, "Dragonite Proxy X", popup);
+
+            // set Auto size
+            trayIcon.setImageAutoSize(true);
+
             // set the TrayIcon properties
             trayIcon.addActionListener(showListener);
 
