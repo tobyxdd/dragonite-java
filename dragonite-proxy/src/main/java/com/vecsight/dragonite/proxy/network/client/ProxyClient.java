@@ -78,7 +78,7 @@ public class ProxyClient {
             Logger.info("ACL loaded: {} by {}", acl.getTitle(), acl.getAuthor());
         }
 
-        serverSocket = new ServerSocket(socks5port);
+        serverSocket = new ServerSocket(socks5port,2048,InetAddress.getByName("localhost"));
 
         prepareUnderlyingConnection(dragoniteSocketParameters);
 
